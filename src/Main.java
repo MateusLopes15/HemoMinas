@@ -5,11 +5,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Main {
+     public  static Hemocentro atualHemocentro = null;
     public static void main(String[] args) {
+        
         Hemominas.getInstance();
         Scanner sc = new Scanner(System.in);
         while (true) {
-            System.out.println("\n/// MENU PRINCIPAL - SISTEMA DE CONTROLE DO HEMOMINAS ///");
+            System.out.println("\n/// MENU PRINCIPAL - SISTEMA DE CONTROLE DO HEMOMINAS ///"); //Modificar para um sistema que contenha atendimento. Doador. Gerente
             System.out.println("Selecione a sua opção: ");
             System.out.println("1 - Sistema de Atendimento");
             System.out.println("2 - Sistema de Gestão");
@@ -18,7 +20,7 @@ public class Main {
             int escolha = entradaUsuario(sc, 1, 3);
             switch (escolha) {
              case 1:
-             //sistemaAtendimento(sc);
+             sistemaAtualHemocentro(sc);
              break;
             case 2:
              sistemaGestao(sc);
@@ -30,15 +32,67 @@ public class Main {
         }
     }
 
+    
+    static void sistemaAtualHemocentro(Scanner sc){
+        if(atualHemocentro!=null && Hemominas.getInstance().getQtdHemocentros()!=0){
+            System.out.println("O hemocentro atual é: " + atualHemocentro.getNome());
+            System.out.println("Deseja trocar? 1- SIM ou 2 - Não");
+            String escolha = sc.nextLine().trim().toLowerCase();
+            switch(escolha){
+                case "1", "sim", "1-sim":
+                entrarHemocentro(sc);
+                case "2", "não", "nao", "2-nao", "2-não":
+                sistemaAtendimento(sc);
+                
+            }
+        }else{
+            if(Hemominas.getInstance().getQtdHemocentros()==0){
+                System.out.println("Nennhum Hemocentro cadastrado. Crie um Hemocentro antes");
+                sistemaGestao(sc);
+            }else{
+                 entrarHemocentro(sc);
+            }
+           
+        }
+    }
+
+    static void sistemaAtendimento(Scanner sc){
+            System.out.println("\n/// MENU PRINCIPAL - SISTEMA DE ATENDIMENTO ///"); 
+            System.out.println("Selecione a sua opção: ");
+            System.out.println("1 - Gerenciar Doadores");
+            System.out.println("2 - Gerenciar Coletas");
+            System.out.println("3 - Voltar");
+
+            int escolha = entradaUsuario(sc, 1, 3);
+            switch (escolha) {
+             case 1:
+             sistemaDoadores(sc);
+             break;
+            case 2:
+             //sistemaColeta(sc);
+            break;
+             case 3:
+             return;
+             }
+    }
+    static void entrarHemocentro(Scanner sc){
+        Hemominas.getInstance().listarHemocentros();
+        System.out.println("Escolha o nome do Hemocentro que deseja entrar");
+        String nomeAtual = sc.nextLine();
+        
+        atualHemocentro = Hemominas.getInstance().retornaHemocentro(Hemominas.getInstance().getIdHemocentro(nomeAtual));
+        return;
+    }
+
     static void sistemaGestao(Scanner sc) {
+       
         while (true) {
             System.out.println("/// MENU - SISTEMA DE GESTÃO DO HEMOMINAS ///");
             System.out.println("1 - Gerenciar Hemocentros");
             System.out.println("2 - Gerenciar listagens");
-            System.out.println("3 - Gerenciar doadores");
-            System.out.println("4 - Gerenciar Funcionarios");
-            System.out.println("5 - Retornar ao menu principal");
-            int escolha = entradaUsuario(sc, 1, 5);
+            System.out.println("3 - Gerenciar Funcionarios");
+            System.out.println("4 - Retornar ao menu principal");
+            int escolha = entradaUsuario(sc, 1, 4);
             switch (escolha) {
                 case 1:
                     sistemaHemocentro(sc);
@@ -47,16 +101,18 @@ public class Main {
                     // sistemaListagens(sc);
                     break;
                 case 3:
-                    sistemaDoadores(sc);
+                   
                     break;
                 case 4:
-                    // sistemaTarifas(sc);
-                    break;
-                case 5:
+                    
                     return;
+                
             }
-        }
+        
+    
     }
+    }
+    
 
 
     static void sistemaDoadores(Scanner sc){
@@ -75,7 +131,7 @@ public class Main {
                     //atualizarDoador(sc);
                     break;
                 case 3:
-                    //listaDeDoadores();
+                    Hemominas.getInstance().listaDoadores(atualHemocentro);
                     break;
                 case 4:
                     //deletarDoador(sc);
@@ -85,8 +141,10 @@ public class Main {
             }
     }
     static void adicionarDoador(Scanner sc){
+        Date dataNasc = null;
+        
         while (true) {
-        System.out.println("Digite o nome do hemocentro...");
+        System.out.println("Digite o nome do doador...");
         String nome = sc.nextLine();       
         if(nome.isEmpty()){
             System.out.println("Nome não pode ser vazio");
@@ -95,20 +153,20 @@ public class Main {
         System.out.println("Digite O CPF");
         String cpf = sc.nextLine(); 
         if(cpf.isEmpty() || Doador.validaCPF(cpf) == false){
-            System.out.println("Endereço não pode ser vazio");
+            System.out.println("O CPF não pode ser vazio");
             continue;
         }
-        System.out.println("Digite o CEP do hemocentro...");
+        System.out.println("Digite a data de nascimento do doador...");
         String dataNascString = sc.nextLine().trim();
          if(dataNascString.isEmpty()){
-            System.out.println("CEP não pode ser vazio");
+            System.out.println("A data de nascimento não pode ser vazio");
             continue;
         }
         
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         sdf.setLenient(false);
         try{
-            Date dataNasc = sdf.parse(dataNascString);
+             dataNasc = sdf.parse(dataNascString);
         }catch(ParseException e ){
             System.out.println("Erro. DATA INVALIDA");
             continue;
@@ -117,19 +175,21 @@ public class Main {
 
 
        
-        System.out.println("Digite o email do hemocentro...");
+        System.out.println("Digite o genero biologico do doador...");
         String genero = sc.nextLine(); 
         if(genero.isEmpty()){
             System.out.println("Email não pode ser vazio");
             continue;
         }
-        System.out.println("Digite o telefone do hemocentro...");
+        System.out.println("Digite o telefone do doador...");
         String telefone = sc.nextLine();
          if(telefone.isEmpty()){
             System.out.println("Telefone não pode ser vazio");
             continue;
          }
         try{
+            Doador doador = Doador.getInstance(nome, cpf, dataNasc, genero, telefone);
+            Hemominas.getInstance().atualizaDoador(atualHemocentro, doador);
          //Hemocentro hemocentro = Hemocentro.getInstance(nome, endereco, cep, email, telefone);
          //Hemominas.getInstance().cadastrarHemocentro(hemocentro);
         }catch (IllegalArgumentException e){
@@ -186,12 +246,16 @@ while (true) {
             System.out.println("Endereço não pode ser vazio");
             continue;
         }
+        String cep = "0"; 
+        while(Hemocentro.isValidCep(cep)==false){
         System.out.println("Digite o CEP do hemocentro...");
-        String cep = sc.nextLine(); 
-        if(cep.isEmpty()){
-            System.out.println("CEP não pode ser vazio");
-            continue;
+        cep = sc.nextLine(); 
+       
+        if(Hemocentro.isValidCep(cep)==false){
+            System.out.println("CEP INVALIDO");
         }
+        }
+        
         System.out.println("Digite o email do hemocentro...");
         String email = sc.nextLine(); 
         if(email.isEmpty()){

@@ -32,9 +32,10 @@ public final class Hemominas {
         this.emailSede ="gabinete@hemominas.mg.gov.br";
         this.telefoneSede = "(31) 3768-7450";
         this.listaHemocentros = new ArrayList<>();
+        
 
     }
-
+    
 
 
     public int getQtdHemocentros(){
@@ -81,7 +82,7 @@ public Hemocentro retornaHemocentro(int id){
 
 
 
-    public boolean cadastrarHemocentro(Hemocentro hemocentro){
+    public boolean cadastrarHemocentro(Hemocentro hemocentro){//Privar só pra o gestor
         if (hemocentro == null) {
         throw new IllegalArgumentException();
     }
@@ -132,12 +133,12 @@ public void listarHemocentros(){
         System.out.println(hemocentr.get(i).getNome());
     }
     }
-public void removeHemocentro(int id){
+public void removeHemocentro(int id){ //Privar só pra o gestor
     listaHemocentros.remove(id);
 }
 
 
-    public void atualizacaoDosHemocentro(int id,Hemocentro hemocentro){ //modificar para pegar o clone e depois retorna
+    public void atualizacaoDosHemocentro(int id,Hemocentro hemocentro){ //Privar só pra o gestor
         listaHemocentros.get(id).setCep(hemocentro.getCep());
         listaHemocentros.get(id).setEmail(hemocentro.getEmail());
         listaHemocentros.get(id).setEndereco(hemocentro.getEndereco());
@@ -145,7 +146,13 @@ public void removeHemocentro(int id){
         listaHemocentros.get(id).setTelefone(hemocentro.getTelefone());
 
     }
-
-
+    public void atualizaDoador(Hemocentro hemocentro, Doador doador){
+        int id = getIdHemocentro(hemocentro.getNome());
+        listaHemocentros.get(id).adicionarDoador(doador);
+    }
+public void listaDoadores(Hemocentro hemocentro){
+    int id = getIdHemocentro(hemocentro.getNome());
+    listaHemocentros.get(id).listaDoadores();
+}
    
 }

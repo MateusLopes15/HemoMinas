@@ -1,0 +1,7 @@
+1 - CRUD DOADOR - UD
+2 - CRUD Coleta - CRUD
+3 - Iniciar automaticamente doadores e coletas
+4 - Gerar read das bolsas de um hemocentro especifico e gerar read das bolsas de todos Hemocentros
+5 - Criar o Funcionario
+6 - Criar o arquivo CSV com os reads
+7 - Rever todos Try Catchs

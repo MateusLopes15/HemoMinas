@@ -1,5 +1,5 @@
 import java.util.Date;
-public class Funcionario {
+public class Funcionario extends Pessoa{
     Date dataIngresso;
     
 

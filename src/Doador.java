@@ -1,13 +1,16 @@
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-public class Doador extends Pessoa {
+public class Doador extends Pessoa  {
+    
     private List<Date> listaDoacoes;
     private String genero;
     private int id;
     private int identificaId = 0;
-
-   private Doador(String nome, String cpf, Date dateNasc, String genero, String telefone){
+    
+    
+   
+    private Doador(String nome, String cpf, Date dateNasc, String genero, String telefone){
    
     this.nome = nome;
     this.cpf = cpf;
@@ -46,5 +49,7 @@ public class Doador extends Pessoa {
     public String getGenero() {
         return genero;
     }
+    
+    
    
 }

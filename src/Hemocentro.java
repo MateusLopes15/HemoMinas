@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Hemocentro implements Cloneable {
     private String nome;
@@ -10,6 +12,7 @@ public class Hemocentro implements Cloneable {
     // private List<Estoque> listaestoques;
     private List<Doador> listadoadores;
     private List<Coleta> listaColetas;
+    private List<Funcionario> listaFuncionarios;
 
 
 private Hemocentro(String nome, String endereco, String cep, String email, String telefone){
@@ -20,6 +23,7 @@ private Hemocentro(String nome, String endereco, String cep, String email, Strin
     this.telefone = telefone;
     this.listaColetas = new ArrayList<>();
     this.listadoadores = new ArrayList<>();
+    this.listaFuncionarios = new ArrayList<>();
     
     // this.listaestoques = new ArrayList<>();
 }
@@ -38,7 +42,20 @@ public Hemocentro(Hemocentro hemocentro){
     this.telefone = hemocentro.getTelefone();
     this.listaColetas = new ArrayList<>();
     this.listadoadores = new ArrayList<>();
+     this.listaFuncionarios = new ArrayList<>();
 }
+// public Doador pesquisarDoador(String cpf){
+//     for Vou criar dia 18 essa parte para fazer funcionar
+// }
+public static boolean isValidCep(String cep) {
+        String regexCep = "^\\d{5}-\\d{3}$|^\\d{8}$";
+        Pattern patternCep = Pattern.compile(regexCep);
+        if (cep == null || cep.trim().isEmpty()) {
+            return false;
+        }
+        Matcher matcher = patternCep.matcher(cep.trim());
+        return matcher.matches();
+    }
 
 public String getNome() {
 	return nome;
