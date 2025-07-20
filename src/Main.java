@@ -3,6 +3,7 @@ import java.util.Scanner;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.time.LocalDate;
 
 public class Main {
      public  static Hemocentro atualHemocentro = null;
@@ -69,7 +70,7 @@ public class Main {
              sistemaDoadores(sc);
              break;
             case 2:
-             //sistemaColeta(sc);
+             sistemaColeta(sc);
             break;
              case 3:
              return;
@@ -83,6 +84,54 @@ public class Main {
         atualHemocentro = Hemominas.getInstance().retornaHemocentro(Hemominas.getInstance().getIdHemocentro(nomeAtual));
         return;
     }
+    static void sistemaColeta(Scanner sc){
+        System.out.println("1 - CRIAR COLETA");
+            System.out.println("2 - ATUALIZAR COLETA");
+            System.out.println("3 - LISTAR COLETAS");
+            System.out.println("4 - APAGAR COLETA");
+            System.out.println("5 - Retornar ao menu principal");
+            int escolha = entradaUsuario(sc, 1, 5);
+            switch (escolha) {
+                case 1:
+                    adicionarColeta(sc);
+                    break;
+                case 2:
+                    //atualizarDoador(sc);
+                    break;
+                case 3:
+                    //Hemominas.getInstance().listaDoadores(atualHemocentro);
+                    break;
+                case 4:
+                    //deletarDoador(sc);
+                    break;
+                case 5:
+                    return;
+                }
+    }
+
+    static void adicionarColeta(Scanner sc){
+        System.out.println("Digite o nome do Doador");
+        String nome = sc.nextLine();
+        //Doador doadorAtual = Hemominas.getInstance().atualizaColeta(atualHemocentro, null);; //Mandar o Hemocentro atual e trocar no hemocentro atual
+        Doador doadorAtual = Hemominas.getInstance().pesquisaDoador(atualHemocentro, nome);
+        System.out.println("Digite o Tipo Sanguineo do doador");
+        String escolha = sc.nextLine();
+        TipoSanguineo tipo = TipoSanguineo.stringParaTipoSanguineo(escolha);
+        Coleta coleta = Coleta.getInstance(tipo, doadorAtual, LocalDate.now());
+        System.out.println("Digite o resultado do Exame de Hepatite B");
+        String exame1 = sc.nextLine();
+        Exame exame = Exame.getInstance(TipoExame.stringParaTipo("HepatiteB"), exame1);
+        coleta.adicionarExame(exame);
+        // coleta.adicionarExame(null);
+        // coleta.adicionarExame(null);
+        // coleta.adicionarExame(null);
+        // coleta.adicionarExame(null);
+
+        Hemominas.getInstance().atualizaColeta(atualHemocentro, coleta);
+    
+    }
+
+
 
     static void sistemaGestao(Scanner sc) {
        
@@ -112,7 +161,18 @@ public class Main {
     
     }
     }
-    
+    static TipoExame lerTipo(Scanner sc) {
+        while (true) {
+            TipoExame.listarOpcoes();
+            String entrada = sc.nextLine();
+            TipoExame tipo = TipoExame.stringParaTipo(entrada);
+            if (tipo != null) {
+                return tipo;
+            } else {
+                System.out.println("Tipo inválido. Tente novamente.");
+            }
+        }
+    }
 
 
     static void sistemaDoadores(Scanner sc){

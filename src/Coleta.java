@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-public class Coleta {
+public class Coleta implements Cloneable{
    
     private TipoSanguineo tipo;
     private List<Exame> listaExames;
@@ -24,6 +24,49 @@ public class Coleta {
         this.tipo = tipo;
         this.doador = doador;
         this.dataValidade = dataAtual.plusYears(1);
+        this.listaExames = new ArrayList<>();
     }
+
+    public Coleta(Coleta coleta){
+      this.tipo = coleta.getTipo();
+        this.doador = coleta.getDoador();
+        this.dataValidade = coleta.getDataValidade();
+        this.listaExames = new ArrayList<>();
+    }
+    public void adicionarExame(Exame exame){ //Fazer as verificações
+      this.listaExames.add(exame);
+    }
+
+
+    public TipoSanguineo getTipo() {
+      return tipo;
+    }
+    public List<Exame> getListaExames() { //fazer o clone
+      return listaExames;
+    }
+    public void listarExame(){
+       for(Exame exames : listaExames){
+        System.out.println(exames.getResultado());
+       }
+      
+    }
+    public Doador getDoador() {
+      try{
+      return doador.clone();
+
+      }catch(CloneNotSupportedException e){
+          return null;
+      }
+      
+    }
+    public LocalDate getDataValidade() {
+      return dataValidade;
+    }
+
+@Override
+protected Coleta clone() throws CloneNotSupportedException {
+    // TODO Auto-generated method stub
+    return (Coleta)super.clone();
+}
     
 }

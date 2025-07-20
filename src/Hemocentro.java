@@ -100,11 +100,39 @@ void setEmail(String novoemail) {
 void setTelefone(String novotelefone) {
 	this.telefone = novotelefone;
 }
+public void adicionarColeta(Coleta coleta){
+    listaColetas.add(coleta);
+}
+
 @Override
 public Hemocentro clone() throws CloneNotSupportedException {
         
      return (Hemocentro) super.clone();
     }
+
+public List<Doador> retornaListaDoador(){
+   List<Doador> listadoadoresCopia = new ArrayList<>();
+    for (Doador doadorOriginal : this.listadoadores) {
+            try {
+                listadoadoresCopia.add(doadorOriginal.clone());
+            } catch (CloneNotSupportedException e) {
+               
+            }
+        }
+        return listadoadoresCopia;
+    }
+public List<Coleta> retornaListaColeta(){
+   List<Coleta> listacoletaCopia = new ArrayList<>();
+    for (Coleta coletaOriginal : this.listaColetas) {
+            try {
+                listacoletaCopia.add(coletaOriginal.clone());
+            } catch (CloneNotSupportedException e) {
+               
+            }
+        }
+        return listacoletaCopia;
+    }
+
 
  public void adicionarDoador(Doador doador){ //fazer otry e verificar se é null
         listadoadores.add(doador);
@@ -113,6 +141,8 @@ public void listaDoadores(){
     for(Doador doadores: listadoadores){
         System.out.println(doadores.getNome());
     }
+
+
 }
 
 

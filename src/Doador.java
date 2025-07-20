@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-public class Doador extends Pessoa  {
+public class Doador extends Pessoa implements Cloneable {
     
     private List<Date> listaDoacoes;
     private String genero;
@@ -49,7 +49,14 @@ public class Doador extends Pessoa  {
     public String getGenero() {
         return genero;
     }
+
+@Override
+protected Doador clone() throws CloneNotSupportedException {
     
+    return (Doador)super.clone();
+}
     
+
+
    
 }
