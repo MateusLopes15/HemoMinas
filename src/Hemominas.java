@@ -1,8 +1,7 @@
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-
-import javax.management.RuntimeErrorException;
 
 public final class Hemominas {
     // Código/Nome/Endereco/CEP/EMAIL/Telefone
@@ -52,28 +51,22 @@ public final class Hemominas {
         return HemocentroCopia;
     }
 
-    public Hemocentro retornaHemocentro(int id) {
+    public Hemocentro retornaHemocentro(int id) throws NoSuchElementException {
         Hemocentro HemocentroCopia = null;
         try {
             if (listaHemocentros.isEmpty()) {
                 throw new NoSuchElementException("Não há hemocentros na lista para clonar."); // tirar essa parte
-
             }
-
             HemocentroCopia = listaHemocentros.get(id).clone();
-
             return HemocentroCopia;
-
         } catch (CloneNotSupportedException e) {
             return null;
-
         } catch (NoSuchElementException e) {
             return null;
         }
-
     }
 
-    public boolean cadastrarHemocentro(Hemocentro hemocentro) {// Privar só pra o gestor
+    public boolean cadastrarHemocentro(Hemocentro hemocentro) throws IllegalArgumentException, RuntimeException {// Privar só pra o gestor
         if (hemocentro == null) {
             throw new IllegalArgumentException();
         }
@@ -95,7 +88,7 @@ public final class Hemominas {
         return false;
     }
 
-    public int getIdHemocentro(String nome) { // Verificar os returns
+    public int getIdHemocentro(String nome) throws IllegalArgumentException { // Verificar os returns
         int id = -1;
         try {
             if (listaHemocentros.size() > 0) {
@@ -117,8 +110,7 @@ public final class Hemominas {
     public void listarHemocentros() {
         List<Hemocentro> hemocentr;
         hemocentr = Hemominas.getInstance().retornarHemocentros();
-        for (int i = 0; i < Hemominas.getInstance().getQtdHemocentros(); i++) {
-
+        for (int i = 0; i < getQtdHemocentros(); i++) {
             System.out.println(hemocentr.get(i).getNome());
         }
     }
@@ -142,47 +134,64 @@ public final class Hemominas {
         listaHemocentros.get(id).setNome(hemocentro.getNome());
         listaHemocentros.get(id).setTelefone(hemocentro.getTelefone());
         // listaHemocentros.get(id).
-
     }
 
-    public void atualizaDoador(Hemocentro hemocentro, Doador doador) {
+    public void adicionaDoador(Hemocentro hemocentro, Doador doador) {
         int id = getIdHemocentro(hemocentro.getNome());
         listaHemocentros.get(id).adicionarDoador(doador);
     }
 
-    public void atualizaColeta(Hemocentro hemocentro, Coleta coleta) {
+    public void adicionaColeta(Hemocentro hemocentro, Coleta coleta) {
         int id = getIdHemocentro(hemocentro.getNome());
         listaHemocentros.get(id).adicionarColeta(coleta);
     }
 
-    public void listaDoadores(Hemocentro hemocentro) {
-        int id = getIdHemocentro(hemocentro.getNome());
-        
-        Hemocentro hemocentr;
-        hemocentr = Hemominas.getInstance().retornaHemocentro(id);
-        for (int i = 0; i < Hemominas.getInstance().getQtdHemocentros(); i++) {
-
-            System.out.println(hemocentr.retornaListaDoador().get(i).getNome());
+    public void listarDoadores(Hemocentro h) {
+        int id = getIdHemocentro(h.getNome());
+        Hemocentro hemocentro = retornaHemocentro(id);
+        List<Doador> listaDoadores = hemocentro.retornaListaDoador();
+        if (listaDoadores.size() == 0) {
+            System.out.println("Não existem doadores cadastrados.");
+            return;
         }
 
-
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        System.out.printf("%-30s%-30s%-30s%-30s%-30s%-30s", "ID", "NOME", "CPF", "GÊNERO", "DATA NASC", "TELEFONE");
+        System.out.println();
+        for (int i = 0; i < listaDoadores.size(); i++) {
+            Doador doador = listaDoadores.get(i);
+            System.out.printf("%-30s%-30s%-30s%-30s%-30s%-30s", doador.getId(), doador.getNome(), doador.getCpf(), doador.getGenero(), sdf.format(doador.getNascimento()), doador.getTelefone());
+            System.out.println();
+        }
     }
+
+    public int getPosicaoDoador(Hemocentro h, String cpf) {
+        int id = getIdHemocentro(h.getNome());
+        Hemocentro hemocentro = retornaHemocentro(id);
+        List<Doador> listaDoadores = hemocentro.retornaListaDoador();
+        for (int i = 0; i < listaDoadores.size(); i++) {
+            Doador doadores = listaDoadores.get(i);
+            if (doadores.getCpf().equals(cpf)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public void listaColetas(Hemocentro hemocentro){
            Hemocentro hemocentr;
            int id = getIdHemocentro(hemocentro.getNome());
-            hemocentr = Hemominas.getInstance().retornaHemocentro(id);
-        for (int i = 0; i < Hemominas.getInstance().getQtdHemocentros(); i++) {
-
+            hemocentr = retornaHemocentro(id);
+        for (int i = 0; i < getQtdHemocentros(); i++) {
            hemocentr.retornaListaColeta().get(i).listarExame();
         }
 
     }
 
-    public Doador pesquisaDoador(Hemocentro hemocentro, String nome) {
+    public Doador pesquisaDoador(Hemocentro hemocentro, String cpf) {
         int id = getIdHemocentro(hemocentro.getNome());
-
         for (Doador doadores : listaHemocentros.get(id).retornaListaDoador()) {
-            if (doadores.getNome().equals(nome)) {
+            if (doadores.getCpf().equals(cpf)) {
                 try {
                     return doadores.clone();
                 } catch (CloneNotSupportedException e) {
@@ -191,8 +200,23 @@ public final class Hemominas {
             }
         }
         return null;
-
     }
 
+    public void atualizarDoador(Hemocentro h, Doador doador, String cpfAntigo) {
+        for (Hemocentro hemocentroAtual : listaHemocentros) {
+            if (hemocentroAtual.getNome().equals(h.getNome())) {
+                hemocentroAtual.atualizaDoadorHemocentro(cpfAntigo, doador);
+                return;
+            }
+        }
+    }
 
+    public void removerDoador(Hemocentro h, Doador doador) {
+        for (Hemocentro hemoAtual : listaHemocentros) {
+            if (hemoAtual.getNome().equals(h.getNome())) {
+                hemoAtual.removerDoador(doador.getCpf());
+                return;
+            }
+        }
+    }
 }

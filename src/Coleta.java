@@ -1,7 +1,5 @@
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 public class Coleta implements Cloneable{
    
@@ -65,7 +63,6 @@ public class Coleta implements Cloneable{
 
 @Override
 protected Coleta clone() throws CloneNotSupportedException {
-    // TODO Auto-generated method stub
     return (Coleta)super.clone();
 }
     

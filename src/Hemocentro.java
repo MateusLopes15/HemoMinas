@@ -10,7 +10,7 @@ public class Hemocentro implements Cloneable {
     private String email;
     private String telefone;
     // private List<Estoque> listaestoques;
-    private List<Doador> listadoadores;
+    private List<Doador> listaDoadores;
     private List<Coleta> listaColetas;
     private List<Funcionario> listaFuncionarios;
 
@@ -22,7 +22,7 @@ private Hemocentro(String nome, String endereco, String cep, String email, Strin
     this.email = email;
     this.telefone = telefone;
     this.listaColetas = new ArrayList<>();
-    this.listadoadores = new ArrayList<>();
+    this.listaDoadores = new ArrayList<>();
     this.listaFuncionarios = new ArrayList<>();
     
     // this.listaestoques = new ArrayList<>();
@@ -41,7 +41,7 @@ public Hemocentro(Hemocentro hemocentro){
     this.email = hemocentro.getEmail();
     this.telefone = hemocentro.getTelefone();
     this.listaColetas = new ArrayList<>();
-    this.listadoadores = new ArrayList<>();
+    this.listaDoadores = new ArrayList<>();
      this.listaFuncionarios = new ArrayList<>();
 }
 // public Doador pesquisarDoador(String cpf){
@@ -112,15 +112,16 @@ public Hemocentro clone() throws CloneNotSupportedException {
 
 public List<Doador> retornaListaDoador(){
    List<Doador> listadoadoresCopia = new ArrayList<>();
-    for (Doador doadorOriginal : this.listadoadores) {
+    for (Doador doadorOriginal : this.listaDoadores) {
             try {
                 listadoadoresCopia.add(doadorOriginal.clone());
             } catch (CloneNotSupportedException e) {
-               
+                System.out.println("Erro ao clonar doador.");
             }
         }
         return listadoadoresCopia;
     }
+
 public List<Coleta> retornaListaColeta(){
    List<Coleta> listacoletaCopia = new ArrayList<>();
     for (Coleta coletaOriginal : this.listaColetas) {
@@ -134,11 +135,34 @@ public List<Coleta> retornaListaColeta(){
     }
 
 
- public void adicionarDoador(Doador doador){ //fazer otry e verificar se é null
-        listadoadores.add(doador);
+    public void adicionarDoador(Doador doador){ //fazer otry e verificar se é null
+        listaDoadores.add(doador);
     }
+
+    public void removerDoador(String cpf) {
+        for (Doador d : listaDoadores) {
+            if (d.getCpf().equals(cpf)) {
+                listaDoadores.remove(d);
+                return;
+            }
+        }
+    }
+
+    public void atualizaDoadorHemocentro(String cpf, Doador doador){
+        for (Doador d : listaDoadores) {
+            if (d.getCpf().equals(cpf)) {
+                d.setNome(doador.getNome());
+                d.setCpf(doador.getCpf());
+                d.setDataNasc(doador.getNascimento());
+                d.setGenero(doador.getGenero());
+                d.setTelefone(doador.getTelefone());
+                return;
+            }
+        }
+    }
+
 public void listaDoadores(){
-    for(Doador doadores: listadoadores){
+    for(Doador doadores: listaDoadores){
         System.out.println(doadores.getNome());
     }
 

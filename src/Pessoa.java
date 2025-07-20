@@ -4,6 +4,7 @@ public abstract class Pessoa {
     
     protected String nome;
     protected String cpf;
+    protected String genero;
     protected Date dataNasc;
     protected String telefone;
 
@@ -33,6 +34,38 @@ public abstract class Pessoa {
         }
         int resto = soma % 11;
         return resto < 2 ? 0 : 11 - resto;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+    public String getNome() {
+        return nome;
+    }
+    public String getCpf() {
+        return cpf;
+    }
+    public Date getNascimento() {
+        return dataNasc;
+    }
+    public String getGenero() {
+        return genero;
+    }
+    
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+    public void setDataNasc(Date dataNasc) {
+        this.dataNasc = dataNasc;
+    }
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+    public void setGenero(String genero) {
+        this.genero = genero;
     }
     
 }
