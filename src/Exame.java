@@ -1,4 +1,4 @@
-public class Exame {
+public class Exame implements Cloneable{
     
     private TipoExame exame;
     private String resultado;
@@ -26,6 +26,11 @@ public class Exame {
     return resultado;
    }
 
-
+@Override
+protected Exame clone() throws CloneNotSupportedException {
+    
+    return (Exame) super.clone();
+}
     
 }
+

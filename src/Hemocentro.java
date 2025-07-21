@@ -133,6 +133,20 @@ public List<Coleta> retornaListaColeta(){
         }
         return listacoletaCopia;
     }
+public Coleta retornaColeta(int ide){
+    for (Coleta coletaOriginal : this.listaColetas) {
+            try {
+                if(coletaOriginal.getId()==ide){
+                    return coletaOriginal.clone();
+                }
+                
+            } catch (CloneNotSupportedException e) {
+               return null;
+            }
+        }
+        return null;
+
+}
 
 
     public void adicionarDoador(Doador doador){ //fazer otry e verificar se é null
@@ -158,6 +172,31 @@ public List<Coleta> retornaListaColeta(){
                 d.setTelefone(doador.getTelefone());
                 return;
             }
+        }
+    }
+    public void atualizaColetaHemocentro(Coleta coleta){
+        for(Coleta c: listaColetas){
+            if(coleta.getId()==c.getId()){
+                c.setDoador(coleta.getDoador());
+                c.setDataValidade(coleta.getDataValidade());
+                c.setExame(coleta.getListaExames());
+                c.setTipo(coleta.getTipo());
+            }
+        }
+    }
+    public int getIDColeta(Coleta coleta){
+        int x = -1;
+        for(int i = 0;i< listaColetas.size() ;i++){
+            if(listaColetas.get(i).getId() == coleta.getId()){
+                x = i;
+            }
+        }
+        return x;
+    }
+    public void deletaColeta(Coleta coleta){
+        int i = getIDColeta(coleta);
+        if(i>=0){
+            listaColetas.remove(i);
         }
     }
 
