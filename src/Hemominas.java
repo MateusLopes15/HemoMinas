@@ -194,7 +194,7 @@ public final class Hemominas {
         listaHemocentros.get(id).deletaColeta(coleta);
     }
 
-    
+
     public void listarDoadores(Hemocentro h) {
         int id = getIdHemocentro(h.getNome());
         Hemocentro hemocentro = retornaHemocentro(id);
@@ -262,7 +262,7 @@ public final class Hemominas {
     public static void inicializarHemocentrosDeMinas() {
         System.out.println("--- Inicializando Hemocentros de Minas Gerais ---");
 
-        // Criar e cadastrar o primeiro Hemocentro
+       
         try {
             Hemocentro h1 = Hemocentro.getInstance(
                 "Hemocentro MG - Central",
@@ -271,8 +271,8 @@ public final class Hemominas {
                 "central@hemominas.mg.gov.br",
                 "(31) 3211-1111"
             );
-            if (h1 != null) { // Verifica se o getInstance retornou null
-                Hemominas.getInstance().cadastrarHemocentro(h1); // Chamada explícita ao getInstance()
+            if (h1 != null) { 
+                Hemominas.getInstance().cadastrarHemocentro(h1); 
                 System.out.println("Hemocentro '" + h1.getNome() + "' inicializado.");
             } else {
                 System.err.println("Erro: Não foi possível criar 'Hemocentro MG - Central' devido a parâmetros nulos.");
@@ -283,7 +283,7 @@ public final class Hemominas {
             System.err.println("Erro ao inicializar Hemocentro MG - Central: " + e.getMessage());
         }
 
-        // Criar e cadastrar o segundo Hemocentro
+      
         try {
             Hemocentro h2 = Hemocentro.getInstance(
                 "Hemocentro MG - Juiz de Fora",
@@ -293,7 +293,7 @@ public final class Hemominas {
                 "(32) 3212-2222"
             );
             if (h2 != null) {
-                Hemominas.getInstance().cadastrarHemocentro(h2); // Chamada explícita ao getInstance()
+                Hemominas.getInstance().cadastrarHemocentro(h2); 
                 System.out.println("Hemocentro '" + h2.getNome() + "' inicializado.");
             } else {
                 System.err.println("Erro: Não foi possível criar 'Hemocentro MG - Juiz de Fora' devido a parâmetros nulos.");
@@ -304,7 +304,7 @@ public final class Hemominas {
             System.err.println("Erro ao inicializar Hemocentro MG - Juiz de Fora: " + e.getMessage());
         }
 
-        // Adicione mais hemocentros conforme necessário...
+   
         try {
             Hemocentro h3 = Hemocentro.getInstance(
                 "Hemocentro MG - Uberlândia",
@@ -314,7 +314,7 @@ public final class Hemominas {
                 "(34) 3233-3333"
             );
             if (h3 != null) {
-                Hemominas.getInstance().cadastrarHemocentro(h3); // Chamada explícita ao getInstance()
+                Hemominas.getInstance().cadastrarHemocentro(h3); 
                 System.out.println("Hemocentro '" + h3.getNome() + "' inicializado.");
             } else {
                 System.err.println("Erro: Não foi possível criar 'Hemocentro MG - Uberlândia' devido a parâmetros nulos.");
@@ -326,14 +326,14 @@ public final class Hemominas {
         }
 
 
-        // Para ver o total, ainda precisamos da instância
+     
      
         System.out.println("--- Inicialização concluída ---");
     }
 
 
     public static void inicializarDoadoresParaHemocentros() {
-        Hemominas sistemaHemominas = Hemominas.getInstance(); // Pega a instância do singleton
+        Hemominas sistemaHemominas = Hemominas.getInstance(); 
 
         System.out.println("\n--- Inicializando Doadores para Hemocentros ---");
 
@@ -345,42 +345,40 @@ public final class Hemominas {
         }
 
         Random random = new Random();
-        // Nomes e CPFs fixos para os doadores
+        
         String[] nomesDoador = {"Maria Silva", "João Santos", "Ana Costa", "Pedro Oliveira"};
-        String[] cpfsDoador = {"29447154026", "25892721035", "99988877766", "94524644024"}; // Adapte para CPFs válidos para seu sistema
+        String[] cpfsDoador = {"29447154026", "25892721035", "99988877766", "94524644024"}; 
         String[] generos = {"Feminino", "Masculino"};
 
-        // Loop principal para cada hemocentro cadastrado
+        
         for (Hemocentro hemocentroAtual : hemocentrosCadastrados) {
             System.out.println("Adicionando doadores para o Hemocentro: " + hemocentroAtual.getNome());
 
-            // Adiciona 2 a 3 doadores por hemocentro
-            int numDoadores = 2 + random.nextInt(2); // 2 ou 3
+           
+            int numDoadores = 2 + random.nextInt(2); 
 
             for (int i = 0; i < numDoadores; i++) {
                 try {
-                    // Seleciona dados dos arrays fixos (reutiliza se acabar)
+                    
                     String nomeDoador = nomesDoador[i % nomesDoador.length];
                     String cpfDoador = cpfsDoador[i % cpfsDoador.length];
 
-                    // Gerar LocalDate para data de nascimento (18 a 60 anos atrás)
+                  
                     LocalDate dataNascLocalDate = LocalDate.now().minusYears(random.nextInt(43) + 18);
 
-                    // Converte LocalDate para java.util.Date SE SEU CONSTRUTOR Doador USA java.util.Date
+                    
                     Date dataNascDoador = Date.from(dataNascLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-                    // Se seu Doador usa LocalDate, use dataNascLocalDate diretamente.
+                   
 
                     String generoDoador = generos[random.nextInt(generos.length)];
-                    String telefoneDoador = "319" + (random.nextInt(90000000) + 10000000); // Telefone aleatório
+                    String telefoneDoador = "319" + (random.nextInt(90000000) + 10000000); 
 
-                    // Cria a instância do Doador usando Doador.getInstance()
-                    // Construtor do Doador no seu código fornecido: Doador(String nome, String cpf, Date dataNasc, String genero, String telefone)
+                    
                     Doador novoDoador = Doador.getInstance(
                         nomeDoador, cpfDoador, dataNascDoador, generoDoador, telefoneDoador
                     );
 
                     if (novoDoador != null) {
-                        // Chama o método 'adicionaDoador' da Hemominas
                         sistemaHemominas.adicionaDoador(hemocentroAtual, novoDoador);
                     } else {
                         System.err.println("Erro: Não foi possível criar o objeto Doador para " + nomeDoador + " (parâmetros nulos).");
@@ -388,7 +386,7 @@ public final class Hemominas {
                 } catch (IllegalArgumentException e) {
                     System.err.println("Erro ao criar doador (dados inválidos): " + e.getMessage());
                 } catch (RuntimeException e) {
-                    // Captura exceções como "Doador com CPF X já existe neste hemocentro" se você tiver essa validação
+                   
                     System.err.println("Erro ao adicionar doador ao " + hemocentroAtual.getNome() + ": " + e.getMessage());
                 }
             }
@@ -408,10 +406,10 @@ public final class Hemominas {
         }
 
         Random random = new Random();
-        TipoSanguineo[] todosTiposSanguineos = TipoSanguineo.values(); // Todos os valores do enum TipoSanguineo
-        TipoExame[] todosTiposExame = TipoExame.values();       // Todos os valores do enum TipoExame
+        TipoSanguineo[] todosTiposSanguineos = TipoSanguineo.values();
+        TipoExame[] todosTiposExame = TipoExame.values();       
 
-        // Itera sobre cada hemocentro
+     
         for (Hemocentro hemocentroAtual : hemocentrosCadastrados) {
             List<Doador> doadoresDoHemocentro = hemocentroAtual.retornaListaDoador();
 
@@ -422,10 +420,10 @@ public final class Hemominas {
 
             System.out.println("  Processando coletas para Hemocentro: " + hemocentroAtual.getNome());
 
-            // Para CADA DOADOR, vamos criar UMA coleta e preenchê-la com exames.
+           
             for (Doador doadorAtual : doadoresDoHemocentro) {
                 try {
-                    // 1. Criar a Coleta
+                 
                     TipoSanguineo tipoSanguineoColeta = todosTiposSanguineos[random.nextInt(todosTiposSanguineos.length)];
                     LocalDate dataAtualColeta = LocalDate.now().minusDays(random.nextInt(30)); // Coleta nos últimos 30 dias
 
@@ -438,24 +436,23 @@ public final class Hemominas {
                         continue;
                     }
 
-                    // 2. Adicionar Exames à Coleta
+                    
                     for (TipoExame tipoExameIndividual : todosTiposExame) { // <<-- Itera sobre CADA TIPO DE EXAME
                         String resultadoAleatorio = random.nextBoolean() ? "positivo" : "negativo";
 
-                        // Cria o objeto Exame
+                      
                         Exame novoExame = Exame.getInstance(tipoExameIndividual, resultadoAleatorio);
 
-                        // Adiciona o exame à listaExames DENTRO DO OBJETO COLETA
-                        if (novoExame != null) { // Garante que o exame foi criado
+                        
+                        if (novoExame != null) { 
                             novaColeta.adicionarExame(novoExame);
-                            // System.out.println("      - Exame " + tipoExameIndividual + ": " + resultadoAleatorio); // Debug
+                         
                         } else {
                             System.err.println("      Erro: Não foi possível criar Exame para " + tipoExameIndividual + " para a coleta de " + doadorAtual.getNome() + ".");
                         }
                     }
 
-                    // 3. Adicionar a Coleta (agora com exames) ao Hemocentro via Hemominas
-                    // Usa Hemominas.getInstance() explicitamente
+                   
                     Hemominas.getInstance().adicionaColeta(hemocentroAtual, novaColeta);
                     System.out.println("    Coleta (Tipo: " + novaColeta.getTipo() + ", Exames: " + novaColeta.getListaExames().size() + ") adicionada para Doador " + doadorAtual.getNome() + " no Hemocentro " + hemocentroAtual.getNome() + ".");
 

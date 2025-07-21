@@ -26,7 +26,7 @@ public class Main {
                                                                                                // atendimento. Doador.
                                                                                                // Gerente
             System.out.println("Selecione a sua opção: ");
-            System.out.println("1 - Acessar hemocentros");
+            System.out.println("1 - Acessar Hemocentros");
             System.out.println("2 - Sistema de Gestão");
             System.out.println("3 - SAIR");
 
@@ -47,7 +47,8 @@ public class Main {
 
     static void entrarHemocentro(Scanner sc) {
         while (true) {
-            if (Hemominas.getInstance().getQtdHemocentros() != 0) {
+            try{
+                if (Hemominas.getInstance().getQtdHemocentros() != 0) {
                 Hemominas.getInstance().listarHemocentros();
                 System.out.println("Escolha o Hemocentro que deseja entrar: ");
                 String entrada = sc.nextLine().trim();
@@ -63,6 +64,10 @@ public class Main {
                 System.out.println("Nenhum hemocentro cadastrado.");
                 return;
             }
+            }catch(RuntimeException e){
+                    System.err.println("Ocorreu um erro de " +e);
+            }
+            
         }
     }
 
@@ -132,8 +137,18 @@ public class Main {
                 atualizarColeta(sc);
                 break;
             case 3:
-                Hemominas.getInstance().listaColetas(atualHemocentro);
-                break;
+                try{
+                  Hemominas.getInstance().listaColetas(atualHemocentro);  
+                  break;
+                }catch(NoSuchElementException e){
+                    System.err.println("Erro: " + e);
+                    break;
+                }catch(NullPointerException e){
+                    System.err.println("Erro: " + e);
+                    break;
+                }
+                
+                
             case 4:
                 deletarColeta(sc);
                 break;
@@ -144,7 +159,8 @@ public class Main {
 
     static void adicionarColeta(Scanner sc) {
         System.out.println("Digite o CPF do Doador");
-        String cpf = sc.nextLine();
+        try{
+            String cpf = sc.nextLine();
 
         Doador doadorAtual = Hemominas.getInstance().pesquisaDoador(atualHemocentro, cpf);
         System.out.println("Digite o Tipo Sanguineo do doador");
@@ -156,25 +172,38 @@ public class Main {
 
         coleta.setExame(adicionaExame(sc));
         Hemominas.getInstance().adicionaColeta(atualHemocentro, coleta);
+        }catch(NoSuchElementException e){
+            System.err.println("Erro: " + e);
+        }catch(IndexOutOfBoundsException e){
+            System.err.println("Erro: " + e);
+        }catch(IllegalArgumentException e){
+            System.err.println("Erro: " + e);
+
+        }catch(NullPointerException e){
+            System.err.println("Erro: " + e);
+
+        }
+        
 
     }
 
     static List<Exame> adicionaExame(Scanner sc) { // Modificar para resultado ser padrão
         List<Exame> exameColetaAtual = new ArrayList<>();
+        System.out.println("Digite 'positivo' ou 'negativo'");
         System.out.println("Digite o resultado do exame de Hepatite B");
-        String resultado = sc.nextLine();
+        String resultado = sc.nextLine().trim().toLowerCase();
         exameColetaAtual.add(Exame.getInstance(TipoExame.hepatiteB, resultado));
         System.out.println("Digite o resultado do exame de Hepatite C");
-        resultado = sc.nextLine();
+        resultado = sc.nextLine().trim().toLowerCase();
         exameColetaAtual.add(Exame.getInstance(TipoExame.hepatiteC, resultado));
         System.out.println("Digite o resultado do exame de Sifílis   ");
-        resultado = sc.nextLine();
+        resultado = sc.nextLine().trim().toLowerCase();
         exameColetaAtual.add(Exame.getInstance(TipoExame.sifilis, resultado));
         System.out.println("Digite o resultado do exame da Doença de Chagas");
-        resultado = sc.nextLine();
+        resultado = sc.nextLine().trim().toLowerCase();
         exameColetaAtual.add(Exame.getInstance(TipoExame.Chagas, resultado));
         System.out.println("Digite o resultado do exame de HTLV");
-        resultado = sc.nextLine();
+        resultado = sc.nextLine().trim().toLowerCase();
         exameColetaAtual.add(Exame.getInstance(TipoExame.HTLV, resultado));
 
         return exameColetaAtual;
@@ -203,23 +232,74 @@ public class Main {
                             System.out.println("CPF Inválido");
                         }
                     }
+                    try{
                     coletaMod.setDoador(Hemominas.getInstance().pesquisaDoador(atualHemocentro, cpfnovo));
                      break;
+                    }catch(NoSuchElementException e){
+            System.err.println("Erro: " + e);
+               break;
+        }catch(IndexOutOfBoundsException e){
+            System.err.println("Erro: " + e);
+               break;
+        }catch(IllegalArgumentException e){
+            System.err.println("Erro: " + e);
+               break;
+
+        }catch(NullPointerException e){
+            System.err.println("Erro: " + e);
+               break;
+
+        }
+                    
+                    
                 case "2", "tiposanguineo", "2tiposanguineo":
                     System.out.println("Digite o Tipo Sanguineo do doador");
                     String tipoS = sc.nextLine();
-                    TipoSanguineo tipo = TipoSanguineo.stringParaTipoSanguineo(tipoS);
+                    try{
+                        TipoSanguineo tipo = TipoSanguineo.stringParaTipoSanguineo(tipoS);
                     coletaMod.setTipo(tipo);
                      break;
+                        }catch(IllegalArgumentException e){
+            System.err.println("Erro: " + e);
+               break;
+
+        }catch(NullPointerException e){
+            System.err.println("Erro: " + e);
+               break;
+
+        }
+                    
                 case "3", "listadeexames", "exame", "exames":
+                try{
                     List<Exame> listaExamesnovo = adicionaExame(sc);
                     coletaMod.setListaExames(listaExamesnovo);
                     break;
+                }catch(IllegalArgumentException e){
+            System.err.println("Erro: " + e);
+               break;
+
+        }catch(NullPointerException e){
+            System.err.println("Erro: " + e);
+               break;
+
+        }
+                    
                 default:
                     return;
 
             }
-            Hemominas.getInstance().atualizacaoColeta(atualHemocentro, coletaMod);
+            try{
+                Hemominas.getInstance().atualizacaoColeta(atualHemocentro, coletaMod);
+            }catch(IllegalArgumentException e){
+            System.err.println("Erro: " + e);
+            
+
+        }catch(NullPointerException e){
+            System.err.println("Erro: " + e);
+               
+
+        }
+            
         } catch (InputMismatchException e) {
             System.out.println("Digite um número inteiro");
             atualizarColeta(sc);
@@ -300,8 +380,17 @@ public class Main {
                     atualizarDoador(sc);
                     break;
                 case 3:
+                try{
                     Hemominas.getInstance().listarDoadores(atualHemocentro);
                     break;
+                }catch(NoSuchElementException e){
+                    System.err.println("Erro: " + e);
+                    break;
+                }catch(NullPointerException e){
+                    System.err.println("Erro: " + e);
+                    break;
+                }
+                    
                 case 4:
                     removerDoador(sc);
                     break;

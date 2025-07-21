@@ -39,7 +39,10 @@ public class Coleta implements Cloneable{
       return geraid;
     }
     public void adicionarExame(Exame exame){ //Fazer as verificações
-      this.listaExames.add(exame);
+      if(exame!=null){
+        this.listaExames.add(exame);
+      }
+      
     }
     public void setExame(List<Exame> exames){
       this.listaExames = new ArrayList<>(exames);
