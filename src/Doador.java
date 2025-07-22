@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 public class Doador extends Pessoa implements Cloneable {
 
@@ -42,4 +43,32 @@ public class Doador extends Pessoa implements Cloneable {
     public int getId() {
         return id;
     }
+    public static String geraCPF() {
+        Random r = new Random();
+        int[] cpf = new int[11];
+
+        for (int i = 0; i < 9; i++) {
+            cpf[i] = r.nextInt(10);
+        }
+
+        cpf[9] = calculaDigitoVerificador(cpf, 10);
+        cpf[10] = calculaDigitoVerificador(cpf, 11);
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 11; i++) {
+            sb.append(cpf[i]);
+        }
+
+        return sb.toString();
+    }
+    public static int calculaDigitoVerificador(int[] cpf, int pesoInicial) {
+        int soma = 0;
+        for (int i = 0; i < pesoInicial - 1; i++) {
+            soma += cpf[i] * (pesoInicial - i);
+        }
+        int resto = soma % 11;
+        return resto < 2 ? 0 : 11 - resto;
+    }
+
+
 }

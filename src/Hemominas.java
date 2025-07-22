@@ -346,8 +346,23 @@ public final class Hemominas {
 
         Random random = new Random();
         
-        String[] nomesDoador = {"Maria Silva", "João Santos", "Ana Costa", "Pedro Oliveira"};
-        String[] cpfsDoador = {"29447154026", "25892721035", "99988877766", "94524644024"}; 
+       Random r = new Random();
+        String[] nomes = {
+                "Ana", "Bruno", "Carlos", "Daniela", "Eduardo", "Fernanda", "Gabriel", "Helena", "Igor", "Juliana",
+                "Kleber","Mateus", "Larissa", "Marcelo", "Natália", "Otávio", "Patrícia", "Rafael", "Sabrina", "Thiago",
+                "Vanessa",
+                "Wagner", "Yasmin", "Zeca", "Amanda", "Beatriz", "Caio", "Débora", "Enzo", "Fábio", "Giovana",
+                "Hugo", "Isabela", "João", "Karen", "Leonardo", "Mariana", "Nicolas", "Olívia", "Pedro", "Quésia"
+        };
+
+        String[] sobrenomes = {
+                "Silva", "Souza", "Oliveira", "Pereira", "Costa", "Rodrigues", "Almeida", "Nascimento", "Lima", "Gomes",
+                "Ribeiro", "Martins", "Carvalho", "Araujo", "Mendes", "Barbosa", "Dias", "Teixeira", "Fernandes",
+                "Castro","Lopes",
+                "Cavalcanti", "Moraes", "Farias", "Freitas", "Rezende", "Vieira", "Batista", "Antunes", "Campos",
+                "Xavier",
+                "Sales", "Santos", "Moura", "Monteiro", "Andrade", "Neves", "Amaral", "Queiroz", "Peixoto", "Tavares"
+        };
         String[] generos = {"Feminino", "Masculino"};
 
         
@@ -355,21 +370,17 @@ public final class Hemominas {
             System.out.println("Adicionando doadores para o Hemocentro: " + hemocentroAtual.getNome());
 
            
-            int numDoadores = 2 + random.nextInt(2); 
+            int numDoadores = 2 + random.nextInt(100); 
 
             for (int i = 0; i < numDoadores; i++) {
                 try {
                     
-                    String nomeDoador = nomesDoador[i % nomesDoador.length];
-                    String cpfDoador = cpfsDoador[i % cpfsDoador.length];
+                    String nomeDoador = nomes[r.nextInt(nomes.length)] + " " + sobrenomes[r.nextInt(sobrenomes.length)];
+                    String cpfDoador = Doador.geraCPF();
 
                   
                     LocalDate dataNascLocalDate = LocalDate.now().minusYears(random.nextInt(43) + 18);
-
-                    
                     Date dataNascDoador = Date.from(dataNascLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-                   
-
                     String generoDoador = generos[random.nextInt(generos.length)];
                     String telefoneDoador = "319" + (random.nextInt(90000000) + 10000000); 
 
