@@ -370,6 +370,51 @@ public final class Hemominas {
         }
     }
 
+    public void listarEstoqueValido() {
+        int[] bolsas = new int[8];
+     List<Hemocentro> listahemocentros = Hemominas.getInstance().listaHemocentros;
+
+     for(int y = 0; y< listahemocentros.size();y++){
+        List<Coleta> coletas = listahemocentros.get(y).retornaListaColeta();
+        for (int i = 0; i < coletas.size(); i++) {
+            Coleta coleta = coletas.get(i);
+            if (coleta.retornaUsabilidade()) {
+                int indice = tipoToIndex(coleta.getTipo());
+                bolsas[indice]++;
+            }
+        }
+     }
+     
+        
+        System.out.printf("%-5s%-5s%-5s%-5s%-5s%-5s%-5s%-5s", "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-");
+        System.out.println();
+        System.out.printf("%-5s%-5s%-5s%-5s%-5s%-5s%-5s%-5s", bolsas[0], bolsas[1], bolsas[2], bolsas[3], bolsas[4],
+                bolsas[5], bolsas[6], bolsas[7]);
+        System.out.println();
+    }
+    private int tipoToIndex(TipoSanguineo tipo) {
+        switch (tipo) {
+            case A_POSITIVO:
+                return 0;
+            case A_NEGATIVO:
+                return 1;
+            case B_POSITIVO:
+                return 2;
+            case B_NEGATIVO:
+                return 3;
+            case AB_POSITIVO:
+                return 4;
+            case AB_NEGATIVO:
+                return 5;
+            case O_POSITIVO:
+                return 6;
+            case O_NEGATIVO:
+                return 7;
+            default:
+                return -1;
+        }
+    }
+
     public int getPosicaoDoador(Hemocentro h, String cpf) {
         int id = getIdHemocentro(h.getNome());
         Hemocentro hemocentro = retornaHemocentro(id);

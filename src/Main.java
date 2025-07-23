@@ -341,8 +341,9 @@ public class Main {
             System.out.println("1 - Gerenciar Hemocentros");
             System.out.println("2 - Gerenciar funcionários");
             System.out.println("3 - Listar todas as pessoas");
-            System.out.println("4 - Retornar ao menu principal");
-            int escolha = entradaUsuario(sc, 1, 4);
+            System.out.println("4 - Lista estoque válido de todos os hemocentros");
+            System.out.println("5 - Retornar ao menu principal");
+            int escolha = entradaUsuario(sc, 1, 5);
             switch (escolha) {
                 case 1:
                     sistemaHemocentro(sc);
@@ -353,7 +354,10 @@ public class Main {
                 case 3:
                     Hemominas.getInstance().listarPessoas();
                     break;
-                case 4:
+                case 4: 
+                    Hemominas.getInstance().listarEstoqueValido();
+                    break;
+                case 5:
                     return;
 
             }
