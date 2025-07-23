@@ -20,10 +20,7 @@ public class Main {
         Hemominas.inicializarPessoasParaHemocentros();
         Hemominas.inicializarColetasParaHemocentrosEDoadores();
         while (true) {
-            System.out.println("\n/// MENU PRINCIPAL - SISTEMA DE CONTROLE DO HEMOMINAS ///"); // Modificar para um
-                                                                                               // sistema que contenha
-                                                                                               // atendimento. Doador.
-                                                                                               // Gerente
+            System.out.println("\n/// MENU PRINCIPAL - SISTEMA DE CONTROLE DO HEMOMINAS ///");
             System.out.println("Selecione a sua opção: ");
             System.out.println("1 - Acessar Hemocentros");
             System.out.println("2 - Menu do Gestor");
@@ -157,7 +154,6 @@ public class Main {
                         System.err.println("Erro: " + e);
                         break;
                     }
-
                 case 4:
                     deletarColeta(sc);
                     break;
@@ -196,7 +192,7 @@ public class Main {
 
     }
 
-    static List<Exame> adicionaExame(Scanner sc) { // Modificar para resultado ser padrão
+    static List<Exame> adicionaExame(Scanner sc) {
         List<Exame> exameColetaAtual = new ArrayList<>();
 
         System.out.println("Digite 'positivo' ou 'negativo'");
@@ -354,7 +350,7 @@ public class Main {
                 case 3:
                     Hemominas.getInstance().listarPessoas();
                     break;
-                case 4: 
+                case 4:
                     Hemominas.getInstance().listarEstoqueValido();
                     break;
                 case 5:
@@ -462,7 +458,7 @@ public class Main {
             try {
                 Funcionario funcionario = Funcionario.getInstance(nome, cpf, dataNasc, genero, telefone, dataIngresso,
                         hemocentro);
-                Hemominas.getInstance().adicionaFuncionario(hemocentro, funcionario);
+                Hemominas.getInstance().adicionarPessoa(hemocentro, funcionario);
             } catch (IllegalArgumentException e) {
                 System.err.println("Funcionário cadastrado não pode ser nulo.");
             } catch (RuntimeException e) {
@@ -568,7 +564,7 @@ public class Main {
                         break;
                     }
                     case 6:
-                        Hemominas.getInstance().atualizarFuncionario(hemocentro, funcionarioTemporario, cpfAntigo);
+                        Hemominas.getInstance().atualizarPessoa(hemocentro, funcionarioTemporario, cpfAntigo);
                         System.out.println("Funcionário atualizado com sucesso!");
                         return;
                 }
@@ -590,7 +586,7 @@ public class Main {
 
         Funcionario funcionario = Hemominas.getInstance().pesquisaFuncionario(hemocentro, cpfInput);
         try {
-            Hemominas.getInstance().removerFuncionario(hemocentro, funcionario);
+            Hemominas.getInstance().removerPessoa(hemocentro, funcionario);
         } catch (NoSuchElementException e) {
             e.getMessage();
             return;
@@ -699,7 +695,7 @@ public class Main {
             }
             try {
                 Doador doador = Doador.getInstance(nome, cpf, dataNasc, genero, telefone, atualHemocentro);
-                Hemominas.getInstance().adicionaDoador(atualHemocentro, doador);
+                Hemominas.getInstance().adicionarPessoa(atualHemocentro, doador);
             } catch (IllegalArgumentException e) {
                 System.err.println("Doador cadastrado não pode ser nulo.");
             } catch (RuntimeException e) {
@@ -800,7 +796,7 @@ public class Main {
                         break;
                     }
                     case 6:
-                        Hemominas.getInstance().atualizarDoador(atualHemocentro, doadorTemporario, cpfAntigo);
+                        Hemominas.getInstance().atualizarPessoa(atualHemocentro, doadorTemporario, cpfAntigo);
                         System.out.println("Doador atualizado com sucesso!");
                         return;
                 }
@@ -821,7 +817,7 @@ public class Main {
 
         Doador doador = Hemominas.getInstance().pesquisaDoador(atualHemocentro, cpfInput);
         try {
-            Hemominas.getInstance().removerDoador(atualHemocentro, doador);
+            Hemominas.getInstance().removerPessoa(atualHemocentro, doador);
         } catch (NoSuchElementException e) {
             e.getMessage();
             return;

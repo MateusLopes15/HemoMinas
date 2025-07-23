@@ -9,7 +9,6 @@ public class Hemocentro implements Cloneable {
     private String cep;
     private String email;
     private String telefone;
-    // private List<Estoque> listaestoques;
     private List<Doador> listaDoadores;
     private List<Coleta> listaColetas;
     private List<Funcionario> listaFuncionarios;
@@ -23,8 +22,6 @@ public class Hemocentro implements Cloneable {
         this.listaColetas = new ArrayList<>();
         this.listaDoadores = new ArrayList<>();
         this.listaFuncionarios = new ArrayList<>();
-
-        // this.listaestoques = new ArrayList<>();
     }
 
     public static Hemocentro getInstance(String nome, String endereco, String cep, String email, String telefone) {
@@ -46,9 +43,6 @@ public class Hemocentro implements Cloneable {
         this.listaFuncionarios = new ArrayList<>();
     }
 
-    // public Doador pesquisarDoador(String cpf){
-    // for Vou criar dia 18 essa parte para fazer funcionar
-    // }
     public static boolean isValidCep(String cep) {
         String regexCep = "^\\d{5}-\\d{3}$|^\\d{8}$";
         Pattern patternCep = Pattern.compile(regexCep);
@@ -67,7 +61,7 @@ public class Hemocentro implements Cloneable {
         return endereco;
     }
 
-    public String getCep() { // Fazer Verificação de CEP
+    public String getCep() {
         return cep;
     }
 
@@ -160,54 +154,6 @@ public class Hemocentro implements Cloneable {
 
     }
 
-    public void adicionarDoador(Doador doador) { // fazer otry e verificar se é null
-        listaDoadores.add(doador);
-    }
-
-    public void removerDoador(String cpf) {
-        for (Doador d : listaDoadores) {
-            if (d.getCpf().equals(cpf)) {
-                listaDoadores.remove(d);
-                return;
-            }
-        }
-    }
-
-    public void atualizaDoadorHemocentro(String cpf, Doador doador) {
-        for (Doador d : listaDoadores) {
-            if (d.getCpf().equals(cpf)) {
-                d.setNome(doador.getNome());
-                d.setCpf(doador.getCpf());
-                d.setDataNasc(doador.getNascimento());
-                d.setGenero(doador.getGenero());
-                d.setTelefone(doador.getTelefone());
-                return;
-            }
-        }
-    }
-
-    public void atualizaFuncionarioHemocentro(String cpf, Funcionario funcionario) {
-        for (Funcionario f : listaFuncionarios) {
-            if (f.getCpf().equals(cpf)) {
-                f.setNome(funcionario.getNome());
-                f.setCpf(funcionario.getCpf());
-                f.setDataNasc(funcionario.getNascimento());
-                f.setGenero(funcionario.getGenero());
-                f.setTelefone(funcionario.getTelefone());
-                return;
-            }
-        }
-    }
-
-    public void removerFuncionario(String cpf) {
-        for (Funcionario f : listaFuncionarios) {
-            if (f.getCpf().equals(cpf)) {
-                listaFuncionarios.remove(f);
-                return;
-            }
-        }
-    }
-
     public void atualizaColetaHemocentro(Coleta coleta) {
         for (Coleta c : listaColetas) {
             if (coleta.getId() == c.getId()) {
@@ -246,7 +192,7 @@ public class Hemocentro implements Cloneable {
     public void listarEstoqueTotal() {
         int[] bolsas = new int[8];
         for (int i = 0; i < listaColetas.size(); i++) {
-            int indice = tipoToIndex(listaColetas.get(i).getTipo());
+            int indice = Hemocentro.tipoToIndex(listaColetas.get(i).getTipo());
             bolsas[indice]++;
         }
         System.out.printf("%-5s%-5s%-5s%-5s%-5s%-5s%-5s%-5s", "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-");
@@ -261,7 +207,7 @@ public class Hemocentro implements Cloneable {
         for (int i = 0; i < listaColetas.size(); i++) {
             Coleta coleta = listaColetas.get(i);
             if (coleta.retornaUsabilidade()) {
-                int indice = tipoToIndex(coleta.getTipo());
+                int indice = Hemocentro.tipoToIndex(coleta.getTipo());
                 bolsas[indice]++;
             }
         }
@@ -272,11 +218,76 @@ public class Hemocentro implements Cloneable {
         System.out.println();
     }
 
-    public void adicionarFuncionario(Funcionario funcionario) {
-        listaFuncionarios.add(funcionario);
+    public void adicionarPessoa(Pessoa pessoa) throws IllegalArgumentException {
+        if (pessoa == null)
+            throw new IllegalArgumentException("Pessoa não pode ser nula.");
+
+        if (pessoa instanceof Doador doador)
+            listaDoadores.add(doador);
+
+        else if (pessoa instanceof Funcionario funcionario)
+            listaFuncionarios.add(funcionario);
+
+        else
+            throw new IllegalArgumentException("Tipo de pessoa não suportado: " + pessoa.getClass().getSimpleName());
     }
 
-    private int tipoToIndex(TipoSanguineo tipo) {
+    public void removerPessoa(Pessoa pessoa) throws IllegalArgumentException {
+        if (pessoa == null)
+            throw new IllegalArgumentException("Pessoa não pode ser nula.");
+
+        if (pessoa instanceof Doador doador) {
+            for (Doador d : listaDoadores) {
+                if (d.getCpf().equals(doador.getCpf())) {
+                    listaDoadores.remove(d);
+                    return;
+                }
+            }
+        }
+
+        else if (pessoa instanceof Funcionario funcionario) {
+            for (Funcionario f : listaFuncionarios) {
+                if (f.getCpf().equals(funcionario.getCpf())) {
+                    listaFuncionarios.remove(f);
+                    return;
+                }
+            }
+        }
+
+        else
+            throw new IllegalArgumentException("Tipo de pessoa não suportado: " + pessoa.getClass().getSimpleName());
+    }
+
+    public void atualizaPessoa(String cpf, Pessoa pessoa) {
+        if (pessoa == null)
+            throw new IllegalArgumentException("Pessoa não pode ser nula.");
+
+        if (pessoa instanceof Doador doador) {
+            for (Doador d : listaDoadores) {
+                if (d.getCpf().equals(cpf)) {
+                    d.setNome(doador.getNome());
+                    d.setCpf(doador.getCpf());
+                    d.setDataNasc(doador.getNascimento());
+                    d.setGenero(doador.getGenero());
+                    d.setTelefone(doador.getTelefone());
+                    return;
+                }
+            }
+        } else if (pessoa instanceof Funcionario funcionario) {
+            for (Funcionario f : listaFuncionarios) {
+                if (f.getCpf().equals(cpf)) {
+                    f.setNome(funcionario.getNome());
+                    f.setCpf(funcionario.getCpf());
+                    f.setDataNasc(funcionario.getNascimento());
+                    f.setGenero(funcionario.getGenero());
+                    f.setTelefone(funcionario.getTelefone());
+                    return;
+                }
+            }
+        }
+    }
+
+    public static int tipoToIndex(TipoSanguineo tipo) {
         switch (tipo) {
             case A_POSITIVO:
                 return 0;

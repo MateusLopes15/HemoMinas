@@ -36,6 +36,10 @@ public final class Hemominas {
         this.listaPessoas = new ArrayList<>();
     }
 
+    /*
+     * HEMOCENTROS
+     */
+
     public int getQtdHemocentros() {
         if (listaHemocentros.size() != 0) {
             return listaHemocentros.size();
@@ -61,7 +65,7 @@ public final class Hemominas {
         Hemocentro HemocentroCopia = null;
         try {
             if (listaHemocentros.isEmpty()) {
-                throw new NoSuchElementException("Não há hemocentros na lista para clonar."); // tirar essa parte
+                throw new NoSuchElementException("Não há hemocentros na lista para clonar.");
             }
             HemocentroCopia = listaHemocentros.get(id).clone();
             return HemocentroCopia;
@@ -74,11 +78,7 @@ public final class Hemominas {
         }
     }
 
-    public boolean cadastrarHemocentro(Hemocentro hemocentro) throws IllegalArgumentException, RuntimeException {// Privar
-                                                                                                                 // só
-                                                                                                                 // pra
-                                                                                                                 // o
-                                                                                                                 // gestor
+    public boolean cadastrarHemocentro(Hemocentro hemocentro) throws IllegalArgumentException, RuntimeException {
         if (hemocentro == null) {
             throw new IllegalArgumentException();
         }
@@ -100,7 +100,7 @@ public final class Hemominas {
         return false;
     }
 
-    public int getIdHemocentro(String nome) throws IllegalArgumentException { // Verificar os returns
+    public int getIdHemocentro(String nome) throws IllegalArgumentException {
         int id = -1;
         try {
             if (listaHemocentros.size() > 0) {
@@ -147,13 +147,6 @@ public final class Hemominas {
         listaHemocentros.remove(id);
     }
 
-    public void atualizaHemocentro(Hemocentro hemocentro) {
-        for (Hemocentro atualizado : listaHemocentros) {
-            if (atualizado.getNome().equals(hemocentro.getNome())) {
-            }
-        }
-    }
-
     public void atualizacaoDosHemocentro(int id, Hemocentro hemocentro) {
         listaHemocentros.get(id).setCep(hemocentro.getCep());
         listaHemocentros.get(id).setEmail(hemocentro.getEmail());
@@ -162,29 +155,32 @@ public final class Hemominas {
         listaHemocentros.get(id).setTelefone(hemocentro.getTelefone());
     }
 
-    public void adicionaDoador(Hemocentro hemocentro, Doador doador) {
+    /*
+     * PESSOA
+     */
+
+    public void adicionarPessoa(Hemocentro hemocentro, Pessoa pessoa) {
         int id = getIdHemocentro(hemocentro.getNome());
-        listaHemocentros.get(id).adicionarDoador(doador);
-        adicionarPessoa(doador);
+        try {
+            listaHemocentros.get(id).adicionarPessoa(pessoa);
+            listaPessoas.add(pessoa);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Ocorreu um erro: " + e);
+        }
     }
 
-    public void adicionaFuncionario(Hemocentro hemocentro, Funcionario funcionario) {
+    public void removerPessoa(Hemocentro hemocentro, Pessoa pessoa) {
         int id = getIdHemocentro(hemocentro.getNome());
-        listaHemocentros.get(id).adicionarFuncionario(funcionario);
-        adicionarPessoa(funcionario);
-    }
-
-    public void adicionarPessoa(Pessoa p) {
-        listaPessoas.add(p);
-    }
-
-    public void removerPessoa(Pessoa p1) {
-        for (int i = 0; i < listaPessoas.size(); i++) {
-            Pessoa p2 = listaPessoas.get(i);
-            if (p2.getCpf().equals(p1.getCpf())) {
-                listaPessoas.remove(i);
-                return;
+        try {
+            listaHemocentros.get(id).removerPessoa(pessoa);
+            for (Pessoa p : listaPessoas) {
+                if (p.getCpf().equals(pessoa.getCpf())) {
+                    listaPessoas.remove(p);
+                    return;
+                }
             }
+        } catch (IllegalArgumentException e) {
+            System.out.println("Ocorreu um erro: " + e);
         }
     }
 
@@ -205,9 +201,17 @@ public final class Hemominas {
         }
     }
 
-    public void adicionaColeta(Hemocentro hemocentro, Coleta coleta) {
-        int id = getIdHemocentro(hemocentro.getNome());
-        listaHemocentros.get(id).adicionarColeta(coleta);
+    public void atualizarPessoa(Hemocentro h, Pessoa pessoa, String cpfAntigo) {
+        try {
+            for (Hemocentro hemocentroAtual : listaHemocentros) {
+                if (hemocentroAtual.getNome().equals(h.getNome())) {
+                    hemocentroAtual.atualizaPessoa(cpfAntigo, pessoa);
+                    return;
+                }
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("Ocorreu um erro: " + e);
+        }
     }
 
     public void listarFuncionarios(Hemocentro h) {
@@ -246,23 +250,47 @@ public final class Hemominas {
         return null;
     }
 
-    public void atualizarFuncionario(Hemocentro h, Funcionario funcionario, String cpfAntigo) {
-        for (Hemocentro hemocentroAtual : listaHemocentros) {
-            if (hemocentroAtual.getNome().equals(h.getNome())) {
-                hemocentroAtual.atualizaFuncionarioHemocentro(cpfAntigo, funcionario);
-                return;
-            }
+    public void listarDoadores(Hemocentro h) {
+        int id = getIdHemocentro(h.getNome());
+        Hemocentro hemocentro = retornaHemocentro(id);
+        List<Doador> listaDoadores = hemocentro.retornaListaDoador();
+        if (listaDoadores.size() == 0) {
+            System.out.println("Não existem doadores cadastrados.");
+            return;
+        }
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        System.out.printf("%-30s%-30s%-30s%-30s%-30s%-30s", "ID", "NOME", "CPF", "GÊNERO", "DATA NASC", "TELEFONE");
+        System.out.println();
+        for (int i = 0; i < listaDoadores.size(); i++) {
+            Doador doador = listaDoadores.get(i);
+            System.out.printf("%-30s%-30s%-30s%-30s%-30s%-30s", doador.getId(), doador.getNome(), doador.getCpf(),
+                    doador.getGenero(), sdf.format(doador.getNascimento()), doador.getTelefone());
+            System.out.println();
         }
     }
 
-    public void removerFuncionario(Hemocentro h, Funcionario f) {
-        for (Hemocentro hemoAtual : listaHemocentros) {
-            if (hemoAtual.getNome().equals(h.getNome())) {
-                hemoAtual.removerFuncionario(f.getCpf());
-                removerPessoa(f);
-                return;
+    public Doador pesquisaDoador(Hemocentro hemocentro, String cpf) {
+        int id = getIdHemocentro(hemocentro.getNome());
+        for (Doador doadores : listaHemocentros.get(id).retornaListaDoador()) {
+            if (doadores.getCpf().equals(cpf)) {
+                try {
+                    return doadores.clone();
+                } catch (CloneNotSupportedException e) {
+                    return null;
+                }
             }
         }
+        return null;
+    }
+
+    /*
+     * COLETA
+     */
+
+    public void adicionaColeta(Hemocentro hemocentro, Coleta coleta) {
+        int id = getIdHemocentro(hemocentro.getNome());
+        listaHemocentros.get(id).adicionarColeta(coleta);
     }
 
     public void listarColetas(Hemocentro hemocentro) {
@@ -318,6 +346,20 @@ public final class Hemominas {
         }
     }
 
+    public void atualizacaoColeta(Hemocentro hemocentro, Coleta coleta) {
+        int id = getIdHemocentro(hemocentro.getNome());
+        listaHemocentros.get(id).atualizaColetaHemocentro(coleta);
+    }
+
+    public void deletarColeta(Hemocentro hemocentro, Coleta coleta) {
+        int id = getIdHemocentro(hemocentro.getNome());
+        listaHemocentros.get(id).deletaColeta(coleta);
+    }
+
+    /*
+     * OUTRAS FUNCIONALIDADES
+     */
+
     public void listarExames(Hemocentro hemocentro, Doador doador) {
         List<Coleta> listaColetas = hemocentro.retornaListaColeta();
         if (listaColetas.size() == 0) {
@@ -340,126 +382,31 @@ public final class Hemominas {
         }
     }
 
-    public void atualizacaoColeta(Hemocentro hemocentro, Coleta coleta) {
-        int id = getIdHemocentro(hemocentro.getNome());
-        listaHemocentros.get(id).atualizaColetaHemocentro(coleta);
-    }
-
-    public void deletarColeta(Hemocentro hemocentro, Coleta coleta) {
-        int id = getIdHemocentro(hemocentro.getNome());
-        listaHemocentros.get(id).deletaColeta(coleta);
-    }
-
-    public void listarDoadores(Hemocentro h) {
-        int id = getIdHemocentro(h.getNome());
-        Hemocentro hemocentro = retornaHemocentro(id);
-        List<Doador> listaDoadores = hemocentro.retornaListaDoador();
-        if (listaDoadores.size() == 0) {
-            System.out.println("Não existem doadores cadastrados.");
-            return;
-        }
-
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        System.out.printf("%-30s%-30s%-30s%-30s%-30s%-30s", "ID", "NOME", "CPF", "GÊNERO", "DATA NASC", "TELEFONE");
-        System.out.println();
-        for (int i = 0; i < listaDoadores.size(); i++) {
-            Doador doador = listaDoadores.get(i);
-            System.out.printf("%-30s%-30s%-30s%-30s%-30s%-30s", doador.getId(), doador.getNome(), doador.getCpf(),
-                    doador.getGenero(), sdf.format(doador.getNascimento()), doador.getTelefone());
-            System.out.println();
-        }
-    }
-
     public void listarEstoqueValido() {
         int[] bolsas = new int[8];
-     List<Hemocentro> listahemocentros = Hemominas.getInstance().listaHemocentros;
+        List<Hemocentro> listahemocentros = Hemominas.getInstance().listaHemocentros;
 
-     for(int y = 0; y< listahemocentros.size();y++){
-        List<Coleta> coletas = listahemocentros.get(y).retornaListaColeta();
-        for (int i = 0; i < coletas.size(); i++) {
-            Coleta coleta = coletas.get(i);
-            if (coleta.retornaUsabilidade()) {
-                int indice = tipoToIndex(coleta.getTipo());
-                bolsas[indice]++;
+        for (int y = 0; y < listahemocentros.size(); y++) {
+            List<Coleta> coletas = listahemocentros.get(y).retornaListaColeta();
+            for (int i = 0; i < coletas.size(); i++) {
+                Coleta coleta = coletas.get(i);
+                if (coleta.retornaUsabilidade()) {
+                    int indice = Hemocentro.tipoToIndex(coleta.getTipo());
+                    bolsas[indice]++;
+                }
             }
         }
-     }
-     
-        
+
         System.out.printf("%-5s%-5s%-5s%-5s%-5s%-5s%-5s%-5s", "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-");
         System.out.println();
         System.out.printf("%-5s%-5s%-5s%-5s%-5s%-5s%-5s%-5s", bolsas[0], bolsas[1], bolsas[2], bolsas[3], bolsas[4],
                 bolsas[5], bolsas[6], bolsas[7]);
         System.out.println();
     }
-    private int tipoToIndex(TipoSanguineo tipo) {
-        switch (tipo) {
-            case A_POSITIVO:
-                return 0;
-            case A_NEGATIVO:
-                return 1;
-            case B_POSITIVO:
-                return 2;
-            case B_NEGATIVO:
-                return 3;
-            case AB_POSITIVO:
-                return 4;
-            case AB_NEGATIVO:
-                return 5;
-            case O_POSITIVO:
-                return 6;
-            case O_NEGATIVO:
-                return 7;
-            default:
-                return -1;
-        }
-    }
 
-    public int getPosicaoDoador(Hemocentro h, String cpf) {
-        int id = getIdHemocentro(h.getNome());
-        Hemocentro hemocentro = retornaHemocentro(id);
-        List<Doador> listaDoadores = hemocentro.retornaListaDoador();
-        for (int i = 0; i < listaDoadores.size(); i++) {
-            Doador doadores = listaDoadores.get(i);
-            if (doadores.getCpf().equals(cpf)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    public Doador pesquisaDoador(Hemocentro hemocentro, String cpf) {
-        int id = getIdHemocentro(hemocentro.getNome());
-        for (Doador doadores : listaHemocentros.get(id).retornaListaDoador()) {
-            if (doadores.getCpf().equals(cpf)) {
-                try {
-                    return doadores.clone();
-                } catch (CloneNotSupportedException e) {
-                    return null;
-                }
-            }
-        }
-        return null;
-    }
-
-    public void atualizarDoador(Hemocentro h, Doador doador, String cpfAntigo) {
-        for (Hemocentro hemocentroAtual : listaHemocentros) {
-            if (hemocentroAtual.getNome().equals(h.getNome())) {
-                hemocentroAtual.atualizaDoadorHemocentro(cpfAntigo, doador);
-                return;
-            }
-        }
-    }
-
-    public void removerDoador(Hemocentro h, Doador d) {
-        for (Hemocentro hemoAtual : listaHemocentros) {
-            if (hemoAtual.getNome().equals(h.getNome())) {
-                hemoAtual.removerDoador(d.getCpf());
-                removerPessoa(d);
-                return;
-            }
-        }
-    }
+    /*
+     * INICIALIZAÇÃO DO SISTEMA
+     */
 
     public static void inicializarHemocentrosDeMinas() {
         System.out.println("--- Inicializando Hemocentros de Minas Gerais ---");
@@ -585,7 +532,7 @@ public final class Hemominas {
                     Doador novoDoador = Doador.getInstance(
                             nomeDoador, cpfDoador, dataNascDoador, generoDoador, telefoneDoador, hemocentroAtual);
                     if (novoDoador != null) {
-                        sistemaHemominas.adicionaDoador(hemocentroAtual, novoDoador);
+                        sistemaHemominas.adicionarPessoa(hemocentroAtual, novoDoador);
                     } else {
                         System.err.println("Erro: Não foi possível criar o objeto Doador para " + nomeDoador
                                 + " (parâmetros nulos).");
@@ -629,7 +576,7 @@ public final class Hemominas {
                             dataNascFuncionario, generoFuncionario, telefoneFuncionario, dataIngressoFuncionario,
                             hemocentroAtual);
                     if (novoFuncionario != null) {
-                        sistemaHemominas.adicionaFuncionario(hemocentroAtual, novoFuncionario);
+                        sistemaHemominas.adicionarPessoa(hemocentroAtual, novoFuncionario);
                     } else {
                         System.err.println("Erro: Não foi possível criar o objeto Doador para " + nomeFuncionario
                                 + " (parâmetros nulos).");
@@ -643,37 +590,6 @@ public final class Hemominas {
                 }
             }
         }
-    }
-
-    private static String gerarCPFValido(Random r) {
-        int[] cpf = new int[11];
-
-        for (int i = 0; i < 9; i++) {
-            cpf[i] = r.nextInt(10);
-        }
-
-        // Primeiro dígito verificador
-        int soma1 = 0;
-        for (int i = 0; i < 9; i++) {
-            soma1 += cpf[i] * (10 - i);
-        }
-        int resto1 = soma1 % 11;
-        cpf[9] = (resto1 < 2) ? 0 : 11 - resto1;
-
-        // Segundo dígito verificador
-        int soma2 = 0;
-        for (int i = 0; i < 10; i++) {
-            soma2 += cpf[i] * (11 - i);
-        }
-        int resto2 = soma2 % 11;
-        cpf[10] = (resto2 < 2) ? 0 : 11 - resto2;
-
-        StringBuilder sb = new StringBuilder();
-        for (int num : cpf) {
-            sb.append(num);
-        }
-
-        return sb.toString();
     }
 
     public static void inicializarColetasParaHemocentrosEDoadores() {
@@ -755,6 +671,37 @@ public final class Hemominas {
             }
         }
         System.out.println("\n--- Inicialização de Coletas e Exames CONCLUÍDA ---");
+    }
+
+    private static String gerarCPFValido(Random r) {
+        int[] cpf = new int[11];
+
+        for (int i = 0; i < 9; i++) {
+            cpf[i] = r.nextInt(10);
+        }
+
+        // Primeiro dígito verificador
+        int soma1 = 0;
+        for (int i = 0; i < 9; i++) {
+            soma1 += cpf[i] * (10 - i);
+        }
+        int resto1 = soma1 % 11;
+        cpf[9] = (resto1 < 2) ? 0 : 11 - resto1;
+
+        // Segundo dígito verificador
+        int soma2 = 0;
+        for (int i = 0; i < 10; i++) {
+            soma2 += cpf[i] * (11 - i);
+        }
+        int resto2 = soma2 % 11;
+        cpf[10] = (resto2 < 2) ? 0 : 11 - resto2;
+
+        StringBuilder sb = new StringBuilder();
+        for (int num : cpf) {
+            sb.append(num);
+        }
+
+        return sb.toString();
     }
 
 }
