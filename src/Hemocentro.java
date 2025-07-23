@@ -208,6 +208,175 @@ public class Hemocentro implements Cloneable {
         }
 
     }
+    
+    public void listarEstoqueTotal() {
+        int[] bolsas = new int[8];
+        for (int i = 0; i < listaColetas.size(); i++) {
+            if (listaColetas.get(i).getTipo().equals(TipoSanguineo.A_POSITIVO)) {
+                
+                bolsas[0]++;
+            } else if (listaColetas.get(i).getTipo().equals(TipoSanguineo.A_NEGATIVO)) {
+                bolsas[1]++;
+            } else if (listaColetas.get(i).getTipo().equals(TipoSanguineo.B_POSITIVO)) {
+                bolsas[2]++;
+            } else if (listaColetas.get(i).getTipo().equals(TipoSanguineo.B_NEGATIVO)) {
+                bolsas[3]++;
+            } else if (listaColetas.get(i).getTipo().equals(TipoSanguineo.AB_POSITIVO)) {
+                bolsas[4]++;
+            } else if (listaColetas.get(i).getTipo().equals(TipoSanguineo.AB_NEGATIVO)) {
+                bolsas[5]++;
+            } else if (listaColetas.get(i).getTipo().equals(TipoSanguineo.O_POSITIVO)) {
+                bolsas[6]++;
+            } else if (listaColetas.get(i).getTipo().equals(TipoSanguineo.O_NEGATIVO)) {
+                bolsas[7]++;
+            }
+        }
+        System.out.printf("%-30s%-30s%-30s%-30s%-30s%-30s%-30s%-30s", "A+", "A-", "B+", "B-", "AB+","AB-","O+","O-");
+            System.out.printf("%-30s%-30s%-30s%-30s%-30s%-30s%-30s%-30s",bolsas[0],bolsas[1],bolsas[2],bolsas[3],bolsas[4],bolsas[5],bolsas[6],bolsas[7]);
+    }
+    public void listarEstoqueValido(){
+        int[] bolsas = new int[8];
+        int qtd =0;
+        for (int i = 0; i < listaColetas.size(); i++) {
+            if (listaColetas.get(i).getTipo().equals(TipoSanguineo.A_POSITIVO)) {
+                
+               
+    for (int j = 0; j < listaColetas.get(i).getListaExames().size(); j++) {
+
+                    if (listaColetas.get(i).getListaExames().get(j).getResultado().equals("negativo")) {
+                        qtd++;
+                    }
+                }
+
+                 switch (qtd) {
+                    case 5:
+                    bolsas[0]++;
+                    qtd = 0;
+                    break;
+
+
+                };
+            } else if (listaColetas.get(i).getTipo().equals(TipoSanguineo.A_NEGATIVO)) {
+                
+    for (int j = 0; j < listaColetas.get(i).getListaExames().size(); j++) {
+                    if (listaColetas.get(i).getListaExames().get(j).getResultado().equals("negativo")) {
+                        qtd++;
+                    }
+                }
+
+                 switch (qtd) {
+                    case 5:
+                    bolsas[1]++;
+                     qtd = 0;
+                    break;
+
+
+                };
+            } else if (listaColetas.get(i).getTipo().equals(TipoSanguineo.B_POSITIVO)) {
+               
+    for (int j = 0; j < listaColetas.get(i).getListaExames().size(); j++) {
+                    if (listaColetas.get(i).getListaExames().get(j).getResultado().equals("negativo")) {
+                        qtd++;
+                    }
+                }
+
+                 switch (qtd) {
+                    case 5:
+                    bolsas[2]++;
+                     qtd = 0;
+                    break;
+
+
+                };
+            } else if (listaColetas.get(i).getTipo().equals(TipoSanguineo.B_NEGATIVO)) {
+                
+    for (int j = 0; j < listaColetas.get(i).getListaExames().size(); j++) {
+                    if (listaColetas.get(i).getListaExames().get(j).getResultado().equals("negativo")) {
+                        qtd++;
+                    }
+                }
+
+                 switch (qtd) {
+                    case 5:
+                    bolsas[3]++;
+                     qtd = 0;
+                    break;
+
+
+                };
+            } else if (listaColetas.get(i).getTipo().equals(TipoSanguineo.AB_POSITIVO)) {
+                
+    for (int j = 0; j < listaColetas.get(i).getListaExames().size(); j++) {
+                    if (listaColetas.get(i).getListaExames().get(j).getResultado().equals("negativo")) {
+                        qtd++;
+                    }
+                }
+
+                 switch (qtd) {
+                    case 5:
+                    bolsas[4]++;
+                     qtd = 0;
+                    break;
+
+
+                };
+            } else if (listaColetas.get(i).getTipo().equals(TipoSanguineo.AB_NEGATIVO)) {
+               
+    for (int j = 0; j < listaColetas.get(i).getListaExames().size(); j++) {
+                    if (listaColetas.get(i).getListaExames().get(j).getResultado().equals("negativo")) {
+                        qtd++;
+                    }
+                }
+
+                 switch (qtd) {
+                    case 5:
+                    bolsas[5]++;
+                     qtd = 0;
+                    break;
+
+
+                };
+            } else if (listaColetas.get(i).getTipo().equals(TipoSanguineo.O_POSITIVO)) {
+               
+    for (int j = 0; j < listaColetas.get(i).getListaExames().size(); j++) {
+                    if (listaColetas.get(i).getListaExames().get(j).getResultado().equals("negativo")) {
+                        qtd++;
+                    }
+                }
+
+                 switch (qtd) {
+                    case 5:
+                    bolsas[6]++;
+                     qtd = 0;
+                    break;
+
+
+                };
+            } else if (listaColetas.get(i).getTipo().equals(TipoSanguineo.O_NEGATIVO)) {
+                
+    for (int j = 0; j < listaColetas.get(i).getListaExames().size(); j++) {
+                    if (listaColetas.get(i).getListaExames().get(j).getResultado().equals("negativo")) {
+                        qtd++;
+                    }
+                }
+
+                 switch (qtd) {
+                    case 5:
+                    bolsas[7]++;
+                     qtd = 0;
+                    break;
+
+
+                };
+            }
+        }
+            System.out.printf("%-30s%-30s%-30s%-30s%-30s%-30s%-30s", "A+", "A-", "B+", "B-", "AB+","AB-","O+","O-");
+            System.out.printf("%-30s%-30s%-30s%-30s%-30s%-30s%-30s",bolsas[0],bolsas[1],bolsas[2],bolsas[3],bolsas[4],bolsas[5],bolsas[6],bolsas[7]);
+
+
+        
+    }
+
 
     // public List<Estoque> getListaestoques() {
     // return listaestoques;

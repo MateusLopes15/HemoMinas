@@ -421,7 +421,7 @@ public final class Hemominas {
 
         for (Hemocentro hemocentroAtual : hemocentrosCadastrados) {
             System.out.println("Adicionando doadores para o Hemocentro: " + hemocentroAtual.getNome());
-            int numDoadores = 2 + random.nextInt(2);
+            int numDoadores = 50 + random.nextInt(100);
             for (int i = 0; i < numDoadores; i++) {
                 try {
                     int genero = random.nextInt(2);

@@ -98,7 +98,8 @@ public class Main {
             System.out.println("Selecione a sua opção: ");
             System.out.println("1 - Gerenciar doadores");
             System.out.println("2 - Gerenciar coletas");
-            System.out.println("3 - Voltar");
+            System.out.println("3 - Listar os Estoques");
+            System.out.println("4 - Voltar");
             int escolha = entradaUsuario(sc, 1, 3);
             switch (escolha) {
                 case 1:
@@ -108,6 +109,8 @@ public class Main {
                     sistemaColeta(sc);
                     break;
                 case 3:
+                    listarEstoque(sc);
+                case 4:
                     return;
             }
         }
@@ -214,20 +217,28 @@ public class Main {
 
     static List<Exame> adicionaExame(Scanner sc) { // Modificar para resultado ser padrão
         List<Exame> exameColetaAtual = new ArrayList<>();
+
         System.out.println("Digite 'positivo' ou 'negativo'");
         System.out.println("Digite o resultado do exame de Hepatite B");
+
         String resultado = sc.nextLine().trim().toLowerCase();
         exameColetaAtual.add(Exame.getInstance(TipoExame.hepatiteB, resultado));
+
         System.out.println("Digite o resultado do exame de Hepatite C");
         resultado = sc.nextLine().trim().toLowerCase();
+
         exameColetaAtual.add(Exame.getInstance(TipoExame.hepatiteC, resultado));
         System.out.println("Digite o resultado do exame de Sifílis   ");
+
         resultado = sc.nextLine().trim().toLowerCase();
         exameColetaAtual.add(Exame.getInstance(TipoExame.sifilis, resultado));
+
         System.out.println("Digite o resultado do exame da Doença de Chagas");
         resultado = sc.nextLine().trim().toLowerCase();
+
         exameColetaAtual.add(Exame.getInstance(TipoExame.Chagas, resultado));
         System.out.println("Digite o resultado do exame de HTLV");
+
         resultado = sc.nextLine().trim().toLowerCase();
         exameColetaAtual.add(Exame.getInstance(TipoExame.HTLV, resultado));
 
@@ -347,6 +358,7 @@ public class Main {
 
         }
     }
+        
     static void sistemaGestao(Scanner sc) {
 
         while (true) {
@@ -636,6 +648,7 @@ public class Main {
         }
     }
 
+
     static void adicionarHemocentro(Scanner sc) {
         while (true) {
             System.out.println("Digite o nome do hemocentro...");
@@ -745,6 +758,21 @@ public class Main {
         }
 
     }
+    static void listarEstoque(Scanner sc){
+        System.out.println("Digite se quer listar  1 - TODOS ou 2 - VALIDOS");
+        String escolha = sc.nextLine().toLowerCase().trim().replace(" ", "");
+            switch (escolha) {
+                case "listartodos","todos", "1","1-todos","listar1-todos":
+                    atualHemocentro.listarEstoqueTotal();
+                    break;
+                case"validos","listarvalidos","listarválidos", "2","2-validos","listar2-validos":
+                atualHemocentro.listarEstoqueValido();
+                default:
+                    return;
+            }
+            
+          
+        }
 
     static void deletarHemocentro(Scanner sc) {
         System.out.println("Digite o nome do Hemocentro que deseja remover");
