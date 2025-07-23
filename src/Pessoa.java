@@ -1,7 +1,7 @@
 import java.util.Date;
 
 public abstract class Pessoa {
-    
+
     protected String nome;
     protected String cpf;
     protected String genero;
@@ -37,6 +37,7 @@ public abstract class Pessoa {
 
         return (cpfIntArray[9] == digito1) && (cpfIntArray[10] == digito2);
     }
+
     public static int calculaDigitoVerificador(int[] cpf, int pesoInicial) {
         int soma = 0;
         for (int i = 0; i < pesoInicial - 1; i++) {
@@ -49,18 +50,23 @@ public abstract class Pessoa {
     public String getTelefone() {
         return telefone;
     }
+
     public String getNome() {
         return nome;
     }
+
     public String getCpf() {
         return cpf;
     }
+
     public Date getNascimento() {
         return dataNasc;
     }
+
     public String getGenero() {
         return genero;
     }
+
     public Hemocentro getHemocentro() {
         try {
             return hemocentro.clone();
@@ -69,20 +75,24 @@ public abstract class Pessoa {
             return null;
         }
     }
-    
+
     public void setNome(String nome) {
         this.nome = nome;
     }
+
     public void setCpf(String cpf) {
         this.cpf = cpf;
     }
+
     public void setDataNasc(Date dataNasc) {
         this.dataNasc = dataNasc;
     }
+
     public void setTelefone(String telefone) {
         this.telefone = telefone;
     }
+
     public void setGenero(String genero) {
         this.genero = genero;
-    }    
+    }
 }

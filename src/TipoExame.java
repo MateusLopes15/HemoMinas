@@ -4,6 +4,7 @@ public enum TipoExame {
     sifilis,
     Chagas,
     HTLV;
+
     public static TipoExame stringParaTipo(String entrada) {
         if (entrada == null)
             return null;
@@ -12,9 +13,9 @@ public enum TipoExame {
                 return hepatiteB;
             case "hepatitec", "2":
                 return hepatiteC;
-            case "sifílis","sifilis", "3":
+            case "sifílis", "sifilis", "3":
                 return sifilis;
-            case "Doença de Chagas", "Chagas","4":
+            case "Doença de Chagas", "Chagas", "4":
                 return Chagas;
             case "htlv", "5":
                 return HTLV;

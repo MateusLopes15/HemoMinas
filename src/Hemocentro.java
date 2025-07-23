@@ -133,7 +133,7 @@ public class Hemocentro implements Cloneable {
         return listacoletaCopia;
     }
 
-       public List<Funcionario> retornaListaFuncionarios() {
+    public List<Funcionario> retornaListaFuncionarios() {
         List<Funcionario> listaFuncionariosCopia = new ArrayList<>();
         for (Funcionario funcionarioOriginal : this.listaFuncionarios) {
             try {
@@ -207,7 +207,6 @@ public class Hemocentro implements Cloneable {
             }
         }
     }
-
 
     public void atualizaColetaHemocentro(Coleta coleta) {
         for (Coleta c : listaColetas) {

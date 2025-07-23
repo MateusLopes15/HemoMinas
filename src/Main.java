@@ -483,7 +483,7 @@ public class Main {
 
         Funcionario funcionarioTemporario = Hemominas.getInstance().pesquisaFuncionario(hemocentro, cpfInput);
         if (funcionarioTemporario == null) {
-            System.out.println("O doador informado não existe.");
+            System.out.println("O funcionário informado não existe.");
             return;
         }
 
@@ -1013,33 +1013,37 @@ public class Main {
     }
 
     static Hemocentro inputHemocentro(Scanner sc) {
-        try {
-            Hemominas.getInstance().listarHemocentrosMenu();
-            System.out.println("Escolha o Hemocentro (digite o nome ou o ID): ");
-            String entrada = sc.nextLine().trim();
+        while (true) {
+            try {
+                Hemominas.getInstance().listarHemocentrosMenu();
+                System.out.println("Escolha o Hemocentro (digite o nome ou o ID): ");
+                String entrada = sc.nextLine().trim();
 
-            Hemocentro hemocentro = null;
+                Hemocentro hemocentro = null;
 
-            if (entrada.matches("\\d+")) {
-                int id = Integer.parseInt(entrada);
-                List<Hemocentro> lista = Hemominas.getInstance().retornarHemocentros();
-                if (id >= 0 && id <= lista.size()) {
-                    hemocentro = lista.get(id - 1);
+                if (entrada.matches("\\d+")) {
+                    int id = Integer.parseInt(entrada);
+                    List<Hemocentro> lista = Hemominas.getInstance().retornarHemocentros();
+                    if (id >= 0 && id <= lista.size()) {
+                        hemocentro = lista.get(id - 1);
+                    }
+                } else {
+                    int id = Hemominas.getInstance().getIdHemocentro(entrada);
+                    if (id != -1) {
+                        hemocentro = Hemominas.getInstance().retornaHemocentro(id);
+                    }
                 }
-            } else {
-                int id = Hemominas.getInstance().getIdHemocentro(entrada);
-                if (id != -1) {
-                    hemocentro = Hemominas.getInstance().retornaHemocentro(id);
-                }
-            }
 
-            if (hemocentro == null) {
-                System.out.println("Entrada inválida.");
+                if (hemocentro == null) {
+                    System.out.println("Entrada inválida.");
+                    continue;
+                }
+
+                return hemocentro;
+            } catch (RuntimeException e) {
+                System.out.println("Ocorreu um erro. Tente novamente.");
+                continue;
             }
-            return hemocentro;
-        } catch (RuntimeException e) {
-            System.out.println("Ocorreu um erro: " + e);
-            return null;
         }
     }
 }

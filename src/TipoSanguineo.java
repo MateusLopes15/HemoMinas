@@ -8,29 +8,28 @@ public enum TipoSanguineo {
     O_POSITIVO,
     O_NEGATIVO;
 
-
-    public static TipoSanguineo stringParaTipoSanguineo(String entrada){
-        if(entrada == null)
+    public static TipoSanguineo stringParaTipoSanguineo(String entrada) {
+        if (entrada == null)
             return null;
-            switch (entrada.trim().toUpperCase().replace(" ", "")) {
-                case "A+","APOS","APOSITIVO","1":
-                    return A_POSITIVO;
-                case "A-","ANEG","ANEGATIVO","2":
-                    return A_NEGATIVO;
-                case "B+", "BPOS","BPOSITIVO","3":
-                    return B_POSITIVO;
-                case "B-", "BNEG","BNEGATIVO","4":
-                    return B_NEGATIVO;
-                case "AB+","ABPOS","ABPOSITIVO","5":
-                    return AB_POSITIVO;
-                case "AB-","ABNEG","ABNEGATIVO", "6":
-                    return AB_NEGATIVO;
-                case "O+","OPOS","OPOSITIVO","7":
-                    return O_POSITIVO;
-                case "O-","ONEG","ONEGATIVO","8":
-                default:
-                    return null;
-            }
+        switch (entrada.trim().toUpperCase().replace(" ", "")) {
+            case "A+", "APOS", "APOSITIVO", "1":
+                return A_POSITIVO;
+            case "A-", "ANEG", "ANEGATIVO", "2":
+                return A_NEGATIVO;
+            case "B+", "BPOS", "BPOSITIVO", "3":
+                return B_POSITIVO;
+            case "B-", "BNEG", "BNEGATIVO", "4":
+                return B_NEGATIVO;
+            case "AB+", "ABPOS", "ABPOSITIVO", "5":
+                return AB_POSITIVO;
+            case "AB-", "ABNEG", "ABNEGATIVO", "6":
+                return AB_NEGATIVO;
+            case "O+", "OPOS", "OPOSITIVO", "7":
+                return O_POSITIVO;
+            case "O-", "ONEG", "ONEGATIVO", "8":
+            default:
+                return null;
+        }
     }
 
     public static void listarOpcoes() {
