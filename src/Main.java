@@ -527,7 +527,7 @@ public class Main {
                     }
                     case 3: {
                         String dtNascString = lerEntradaCRUD(sc,
-                                "Digite a nova data de nascimento do doador (dd/MM/yyyy): ");
+                                "Digite a nova data de nascimento do funcionário (dd/MM/yyyy): ");
                         if (dtNascString == null) {
                             System.out.println("Data inválida.");
                             continue;
@@ -544,7 +544,7 @@ public class Main {
                         break;
                     }
                     case 4: {
-                        String genero = lerEntradaCRUD(sc, "Digite o novo gênero biológico do doador: ");
+                        String genero = lerEntradaCRUD(sc, "Digite o novo gênero biológico do funcionário: ");
                         if (genero == null) {
                             System.out.println("Gênero inválido.");
                             continue;
@@ -554,7 +554,7 @@ public class Main {
                         break;
                     }
                     case 5: {
-                        String telefone = lerEntradaCRUD(sc, "Digite o novo telefone do doador: ");
+                        String telefone = lerEntradaCRUD(sc, "Digite o novo telefone do funcionário: ");
                         if (telefone == null) {
                             System.out.println("Telefone inválido.");
                             continue;
@@ -569,7 +569,7 @@ public class Main {
                         return;
                 }
             } catch (RuntimeException e) {
-                System.out.println("Erro ao atualizar o doador.");
+                System.out.println("Erro ao atualizar o funcionário.");
                 return;
             }
         }
@@ -594,7 +594,7 @@ public class Main {
             System.out.println("O CPF informado não existe no sistema.");
             return;
         }
-        System.out.println("Doador removido com sucesso.");
+        System.out.println("Funcionário removido com sucesso.");
     }
 
     static TipoExame lerTipo(Scanner sc) {

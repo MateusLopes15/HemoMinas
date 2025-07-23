@@ -165,17 +165,27 @@ public final class Hemominas {
     public void adicionaDoador(Hemocentro hemocentro, Doador doador) {
         int id = getIdHemocentro(hemocentro.getNome());
         listaHemocentros.get(id).adicionarDoador(doador);
-        adicionaPessoa(doador);
+        adicionarPessoa(doador);
     }
 
     public void adicionaFuncionario(Hemocentro hemocentro, Funcionario funcionario) {
         int id = getIdHemocentro(hemocentro.getNome());
         listaHemocentros.get(id).adicionarFuncionario(funcionario);
-        adicionaPessoa(funcionario);
+        adicionarPessoa(funcionario);
     }
 
-    public void adicionaPessoa(Pessoa p) {
+    public void adicionarPessoa(Pessoa p) {
         listaPessoas.add(p);
+    }
+
+    public void removerPessoa(Pessoa p1) {
+        for (int i = 0; i < listaPessoas.size(); i++) {
+            Pessoa p2 = listaPessoas.get(i);
+            if (p2.getCpf().equals(p1.getCpf())) {
+                listaPessoas.remove(i);
+                return;
+            }
+        }
     }
 
     public void listarPessoas() {
@@ -249,6 +259,7 @@ public final class Hemominas {
         for (Hemocentro hemoAtual : listaHemocentros) {
             if (hemoAtual.getNome().equals(h.getNome())) {
                 hemoAtual.removerFuncionario(f.getCpf());
+                removerPessoa(f);
                 return;
             }
         }
@@ -395,10 +406,11 @@ public final class Hemominas {
         }
     }
 
-    public void removerDoador(Hemocentro h, Doador doador) {
+    public void removerDoador(Hemocentro h, Doador d) {
         for (Hemocentro hemoAtual : listaHemocentros) {
             if (hemoAtual.getNome().equals(h.getNome())) {
-                hemoAtual.removerDoador(doador.getCpf());
+                hemoAtual.removerDoador(d.getCpf());
+                removerPessoa(d);
                 return;
             }
         }
