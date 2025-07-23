@@ -68,6 +68,8 @@ public final class Hemominas {
             return null;
         } catch (NoSuchElementException e) {
             return null;
+        } catch (RuntimeException e) {
+            return null;
         }
     }
 
@@ -113,14 +115,18 @@ public final class Hemominas {
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e);
         }
-
     }
 
     public void listarHemocentros() {
-        List<Hemocentro> hemocentr;
-        hemocentr = Hemominas.getInstance().retornarHemocentros();
+        System.out.println("MUDE. MUDE ESSE MÉTODO AGORA.");
+        //mude esse método agora
+    }
+
+    public void listarHemocentrosMenu() {
+        List<Hemocentro> hemocentros = Hemominas.getInstance().retornarHemocentros();
         for (int i = 0; i < getQtdHemocentros(); i++) {
-            System.out.println(hemocentr.get(i).getNome());
+            Hemocentro hemocentro = hemocentros.get(i);
+            System.out.println((i+1) + ") " + hemocentro.getNome());
         }
     }
 
@@ -131,7 +137,6 @@ public final class Hemominas {
     public void atualizaHemocentro(Hemocentro hemocentro) {
         for (Hemocentro atualizado : listaHemocentros) {
             if (atualizado.getNome().equals(hemocentro.getNome())) {
-
             }
         }
     }
@@ -171,13 +176,8 @@ public final class Hemominas {
         for (int i = 0; i < listaTodasColetas.size(); i++) {
             List<Exame> exames = listaTodasColetas.get(i).getListaExames();
             Coleta coleta = listaTodasColetas.get(i);
-            for (int j = 0; j < exames.size(); j++) {
-                if (exames.get(j).getResultado().equals("negativo")) {
-                    qtd++;
-                }
-            }
-            String usabilidade = "";
-            if (qtd == 5) {
+            String usabilidade;
+            if (coleta.retornaUsabilidade()) {
                 usabilidade = "APROVADA";
             } else {
                 usabilidade = "NEGADA";
@@ -200,22 +200,14 @@ public final class Hemominas {
         System.out.printf("%-30s%-30s%-30s%-30s%-30s", "ID", "TIPO", "CPF", "VALIDADE", "RESULTADO");
         System.out.println();
         for (int i = 0; i < listaColetas.size(); i++) {
-            int qtd = 0;
-            List<Exame> exames = listaColetas.get(i).getListaExames();
             Coleta coleta = listaColetas.get(i);
             if (coleta.getDoador().getCpf().equals(doador.getCpf())) {
-                for (int j = 0; j < exames.size(); j++) {
-                    if (exames.get(j).getResultado().equals("negativo")) {
-                        qtd++;
-                    }
+                String usabilidade;
+                if (coleta.retornaUsabilidade() == true) {
+                    usabilidade = "APROVADA";
+                } else {
+                    usabilidade = "NEGADA";
                 }
-
-                String usabilidade = switch (qtd) {
-                    case 5:
-                        yield "APROVADA";
-                    default:
-                        yield "NEGADA";
-                };
 
                 System.out.printf("%-30s%-30s%-30s%-30s%-30s", coleta.getId(), coleta.getTipo(),
                         coleta.getDoador().getCpf(), coleta.getDataValidade().format(formatter), usabilidade);
@@ -366,7 +358,7 @@ public final class Hemominas {
 
         try {
             Hemocentro h3 = Hemocentro.getInstance(
-                    "Hemocentro MG - Uberlândia",
+                    "Hemocentro MG - Uberlandia",
                     "Rua Getúlio Vargas, 300 - Tabajaras",
                     "38400-015",
                     "uberlandia@hemominas.mg.gov.br",

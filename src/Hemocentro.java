@@ -208,190 +208,56 @@ public class Hemocentro implements Cloneable {
         }
 
     }
-    
+
     public void listarEstoqueTotal() {
         int[] bolsas = new int[8];
         for (int i = 0; i < listaColetas.size(); i++) {
-            if (listaColetas.get(i).getTipo().equals(TipoSanguineo.A_POSITIVO)) {
-                
-                bolsas[0]++;
-            } else if (listaColetas.get(i).getTipo().equals(TipoSanguineo.A_NEGATIVO)) {
-                bolsas[1]++;
-            } else if (listaColetas.get(i).getTipo().equals(TipoSanguineo.B_POSITIVO)) {
-                bolsas[2]++;
-            } else if (listaColetas.get(i).getTipo().equals(TipoSanguineo.B_NEGATIVO)) {
-                bolsas[3]++;
-            } else if (listaColetas.get(i).getTipo().equals(TipoSanguineo.AB_POSITIVO)) {
-                bolsas[4]++;
-            } else if (listaColetas.get(i).getTipo().equals(TipoSanguineo.AB_NEGATIVO)) {
-                bolsas[5]++;
-            } else if (listaColetas.get(i).getTipo().equals(TipoSanguineo.O_POSITIVO)) {
-                bolsas[6]++;
-            } else if (listaColetas.get(i).getTipo().equals(TipoSanguineo.O_NEGATIVO)) {
-                bolsas[7]++;
-            }
+            int indice = tipoToIndex(listaColetas.get(i).getTipo());
+            bolsas[indice]++;
         }
-        System.out.printf("%-30s%-30s%-30s%-30s%-30s%-30s%-30s%-30s", "A+", "A-", "B+", "B-", "AB+","AB-","O+","O-");
-            System.out.printf("%-30s%-30s%-30s%-30s%-30s%-30s%-30s%-30s",bolsas[0],bolsas[1],bolsas[2],bolsas[3],bolsas[4],bolsas[5],bolsas[6],bolsas[7]);
+        System.out.printf("%-5s%-5s%-5s%-5s%-5s%-5s%-5s%-5s", "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-");
+        System.out.println();
+        System.out.printf("%-5s%-5s%-5s%-5s%-5s%-5s%-5s%-5s", bolsas[0], bolsas[1], bolsas[2], bolsas[3],
+                bolsas[4], bolsas[5], bolsas[6], bolsas[7]);
+        System.out.println();
     }
-    public void listarEstoqueValido(){
+
+    public void listarEstoqueValido() {
         int[] bolsas = new int[8];
-        int qtd =0;
         for (int i = 0; i < listaColetas.size(); i++) {
-            if (listaColetas.get(i).getTipo().equals(TipoSanguineo.A_POSITIVO)) {
-                
-               
-    for (int j = 0; j < listaColetas.get(i).getListaExames().size(); j++) {
-
-                    if (listaColetas.get(i).getListaExames().get(j).getResultado().equals("negativo")) {
-                        qtd++;
-                    }
-                }
-
-                 switch (qtd) {
-                    case 5:
-                    bolsas[0]++;
-                    qtd = 0;
-                    break;
-
-
-                };
-            } else if (listaColetas.get(i).getTipo().equals(TipoSanguineo.A_NEGATIVO)) {
-                
-    for (int j = 0; j < listaColetas.get(i).getListaExames().size(); j++) {
-                    if (listaColetas.get(i).getListaExames().get(j).getResultado().equals("negativo")) {
-                        qtd++;
-                    }
-                }
-
-                 switch (qtd) {
-                    case 5:
-                    bolsas[1]++;
-                     qtd = 0;
-                    break;
-
-
-                };
-            } else if (listaColetas.get(i).getTipo().equals(TipoSanguineo.B_POSITIVO)) {
-               
-    for (int j = 0; j < listaColetas.get(i).getListaExames().size(); j++) {
-                    if (listaColetas.get(i).getListaExames().get(j).getResultado().equals("negativo")) {
-                        qtd++;
-                    }
-                }
-
-                 switch (qtd) {
-                    case 5:
-                    bolsas[2]++;
-                     qtd = 0;
-                    break;
-
-
-                };
-            } else if (listaColetas.get(i).getTipo().equals(TipoSanguineo.B_NEGATIVO)) {
-                
-    for (int j = 0; j < listaColetas.get(i).getListaExames().size(); j++) {
-                    if (listaColetas.get(i).getListaExames().get(j).getResultado().equals("negativo")) {
-                        qtd++;
-                    }
-                }
-
-                 switch (qtd) {
-                    case 5:
-                    bolsas[3]++;
-                     qtd = 0;
-                    break;
-
-
-                };
-            } else if (listaColetas.get(i).getTipo().equals(TipoSanguineo.AB_POSITIVO)) {
-                
-    for (int j = 0; j < listaColetas.get(i).getListaExames().size(); j++) {
-                    if (listaColetas.get(i).getListaExames().get(j).getResultado().equals("negativo")) {
-                        qtd++;
-                    }
-                }
-
-                 switch (qtd) {
-                    case 5:
-                    bolsas[4]++;
-                     qtd = 0;
-                    break;
-
-
-                };
-            } else if (listaColetas.get(i).getTipo().equals(TipoSanguineo.AB_NEGATIVO)) {
-               
-    for (int j = 0; j < listaColetas.get(i).getListaExames().size(); j++) {
-                    if (listaColetas.get(i).getListaExames().get(j).getResultado().equals("negativo")) {
-                        qtd++;
-                    }
-                }
-
-                 switch (qtd) {
-                    case 5:
-                    bolsas[5]++;
-                     qtd = 0;
-                    break;
-
-
-                };
-            } else if (listaColetas.get(i).getTipo().equals(TipoSanguineo.O_POSITIVO)) {
-               
-    for (int j = 0; j < listaColetas.get(i).getListaExames().size(); j++) {
-                    if (listaColetas.get(i).getListaExames().get(j).getResultado().equals("negativo")) {
-                        qtd++;
-                    }
-                }
-
-                 switch (qtd) {
-                    case 5:
-                    bolsas[6]++;
-                     qtd = 0;
-                    break;
-
-
-                };
-            } else if (listaColetas.get(i).getTipo().equals(TipoSanguineo.O_NEGATIVO)) {
-                
-    for (int j = 0; j < listaColetas.get(i).getListaExames().size(); j++) {
-                    if (listaColetas.get(i).getListaExames().get(j).getResultado().equals("negativo")) {
-                        qtd++;
-                    }
-                }
-
-                 switch (qtd) {
-                    case 5:
-                    bolsas[7]++;
-                     qtd = 0;
-                    break;
-
-
-                };
+            Coleta coleta = listaColetas.get(i);
+            if (coleta.retornaUsabilidade()) {
+                int indice = tipoToIndex(coleta.getTipo());
+                bolsas[indice]++;
             }
         }
-            System.out.printf("%-30s%-30s%-30s%-30s%-30s%-30s%-30s", "A+", "A-", "B+", "B-", "AB+","AB-","O+","O-");
-            System.out.printf("%-30s%-30s%-30s%-30s%-30s%-30s%-30s",bolsas[0],bolsas[1],bolsas[2],bolsas[3],bolsas[4],bolsas[5],bolsas[6],bolsas[7]);
-
-
-        
+        System.out.printf("%-5s%-5s%-5s%-5s%-5s%-5s%-5s%-5s", "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-");
+        System.out.println();
+        System.out.printf("%-5s%-5s%-5s%-5s%-5s%-5s%-5s%-5s", bolsas[0], bolsas[1], bolsas[2], bolsas[3], bolsas[4],
+                bolsas[5], bolsas[6], bolsas[7]);
+        System.out.println();
     }
 
-
-    // public List<Estoque> getListaestoques() {
-    // return listaestoques;
-    // }
-
-    // public List<Doador> getListadoadores() {
-    // return listadoadores;
-    // }
-
-    // public List<Coleta> getListaColetas() {
-    // return listaColetas;
-    // }
-
-    // public void addEstoque(){
-    // //listaestoques.add();
-    // }
-
+    private int tipoToIndex(TipoSanguineo tipo) {
+        switch (tipo) {
+            case A_POSITIVO:
+                return 0;
+            case A_NEGATIVO:
+                return 1;
+            case B_POSITIVO:
+                return 2;
+            case B_NEGATIVO:
+                return 3;
+            case AB_POSITIVO:
+                return 4;
+            case AB_NEGATIVO:
+                return 5;
+            case O_POSITIVO:
+                return 6;
+            case O_NEGATIVO:
+                return 7;
+            default:
+                return -1;
+        }
+    }
 }

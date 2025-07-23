@@ -46,27 +46,44 @@ public class Main {
 
     static void entrarHemocentro(Scanner sc) {
         while (true) {
-            try{
+            try {
                 if (Hemominas.getInstance().getQtdHemocentros() != 0) {
-                Hemominas.getInstance().listarHemocentros();
-                System.out.println("Escolha o Hemocentro que deseja entrar: ");
-                String entrada = sc.nextLine().trim();
-                atualHemocentro = Hemominas.getInstance()
-                        .retornaHemocentro(Hemominas.getInstance().getIdHemocentro(entrada));
-                if (atualHemocentro == null) {
-                    System.out.println("Entrada inválida.");
-                    continue;
+                    Hemominas.getInstance().listarHemocentrosMenu();
+                    System.out.println("Escolha o Hemocentro (digite o nome ou o ID): ");
+                    String entrada = sc.nextLine().trim();
+
+                    Hemocentro selecionado = null;
+
+                    if (entrada.matches("\\d+")) {
+                        int id = Integer.parseInt(entrada);
+                        List<Hemocentro> lista = Hemominas.getInstance().retornarHemocentros();
+                        if (id >= 0 && id <= lista.size()) {
+                            selecionado = lista.get(id - 1);
+                        }
+                    } else {
+                        int id = Hemominas.getInstance().getIdHemocentro(entrada);
+                        if (id != -1) {
+                            selecionado = Hemominas.getInstance().retornaHemocentro(id);
+                        }
+                    }
+
+                    if (selecionado == null) {
+                        System.out.println("Entrada inválida.");
+                        continue;
+                    }
+
+                    atualHemocentro = selecionado;
+                    sistemaAtendimento(sc);
+                    break;
+
+                } else {
+                    System.out.println("Nenhum hemocentro cadastrado.");
+                    return;
                 }
-                sistemaAtendimento(sc);
-                break;
-            } else {
-                System.out.println("Nenhum hemocentro cadastrado.");
-                return;
+
+            } catch (RuntimeException e) {
+                System.err.println("Ocorreu um erro: " + e.getMessage());
             }
-            }catch(RuntimeException e){
-                    System.err.println("Ocorreu um erro de " +e);
-            }
-            
         }
     }
 
@@ -94,13 +111,14 @@ public class Main {
 
     static void menuFuncionario(Scanner sc) {
         while (true) {
-            System.out.println("\n/// MENU DE FUNCIONÁRIO - SISTEMA DE ATENDIMENTO - " + atualHemocentro.getNome() + " ///");
+            System.out.println(
+                    "\n/// MENU DE FUNCIONÁRIO - SISTEMA DE ATENDIMENTO - " + atualHemocentro.getNome() + " ///");
             System.out.println("Selecione a sua opção: ");
             System.out.println("1 - Gerenciar doadores");
             System.out.println("2 - Gerenciar coletas");
             System.out.println("3 - Listar os Estoques");
             System.out.println("4 - Voltar");
-            int escolha = entradaUsuario(sc, 1, 3);
+            int escolha = entradaUsuario(sc, 1, 4);
             switch (escolha) {
                 case 1:
                     sistemaDoadores(sc);
@@ -110,6 +128,7 @@ public class Main {
                     break;
                 case 3:
                     listarEstoque(sc);
+                    break;
                 case 4:
                     return;
             }
@@ -129,7 +148,8 @@ public class Main {
 
         Doador doador = Hemominas.getInstance().pesquisaDoador(atualHemocentro, cpf);
         while (true) {
-            System.out.println("\n/// MENU DE DOADOR - " + doador.getNome() + " - SISTEMA DE ATENDIMENTO - " + atualHemocentro.getNome() + " ///");
+            System.out.println("\n/// MENU DE DOADOR - " + doador.getNome() + " - SISTEMA DE ATENDIMENTO - "
+                    + atualHemocentro.getNome() + " ///");
             System.out.println("Selecione a sua opção: ");
             System.out.println("1 - Listar coletas");
             System.out.println("2 - Listar exames");
@@ -147,7 +167,6 @@ public class Main {
             }
         }
     }
-
 
     static void sistemaColeta(Scanner sc) {
         while (true) {
@@ -187,31 +206,30 @@ public class Main {
 
     static void adicionarColeta(Scanner sc) {
         System.out.println("Digite o CPF do Doador");
-        try{
+        try {
             String cpf = sc.nextLine();
 
-        Doador doadorAtual = Hemominas.getInstance().pesquisaDoador(atualHemocentro, cpf);
-        System.out.println("Digite o Tipo Sanguineo do doador");
-        String escolha = sc.nextLine();
-        TipoSanguineo tipo = TipoSanguineo.stringParaTipoSanguineo(escolha);
-        System.out.println(tipo);
-        System.out.println(doadorAtual.getNome());
-        Coleta coleta = Coleta.getInstance(tipo, doadorAtual, LocalDate.now());
+            Doador doadorAtual = Hemominas.getInstance().pesquisaDoador(atualHemocentro, cpf);
+            System.out.println("Digite o Tipo Sanguineo do doador");
+            String escolha = sc.nextLine();
+            TipoSanguineo tipo = TipoSanguineo.stringParaTipoSanguineo(escolha);
+            System.out.println(tipo);
+            System.out.println(doadorAtual.getNome());
+            Coleta coleta = Coleta.getInstance(tipo, doadorAtual, LocalDate.now());
 
-        coleta.setExame(adicionaExame(sc));
-        Hemominas.getInstance().adicionaColeta(atualHemocentro, coleta);
-        }catch(NoSuchElementException e){
+            coleta.setExame(adicionaExame(sc));
+            Hemominas.getInstance().adicionaColeta(atualHemocentro, coleta);
+        } catch (NoSuchElementException e) {
             System.err.println("Erro: " + e);
-        }catch(IndexOutOfBoundsException e){
+        } catch (IndexOutOfBoundsException e) {
             System.err.println("Erro: " + e);
-        }catch(IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             System.err.println("Erro: " + e);
 
-        }catch(NullPointerException e){
+        } catch (NullPointerException e) {
             System.err.println("Erro: " + e);
 
         }
-        
 
     }
 
@@ -268,99 +286,93 @@ public class Main {
                             System.out.println("CPF Inválido");
                         }
                     }
-                    try{
-                    coletaMod.setDoador(Hemominas.getInstance().pesquisaDoador(atualHemocentro, cpfnovo));
-                     break;
-                    }catch(NoSuchElementException e){
-            System.err.println("Erro: " + e);
-               break;
-        }catch(IndexOutOfBoundsException e){
-            System.err.println("Erro: " + e);
-               break;
-        }catch(IllegalArgumentException e){
-            System.err.println("Erro: " + e);
-               break;
+                    try {
+                        coletaMod.setDoador(Hemominas.getInstance().pesquisaDoador(atualHemocentro, cpfnovo));
+                        break;
+                    } catch (NoSuchElementException e) {
+                        System.err.println("Erro: " + e);
+                        break;
+                    } catch (IndexOutOfBoundsException e) {
+                        System.err.println("Erro: " + e);
+                        break;
+                    } catch (IllegalArgumentException e) {
+                        System.err.println("Erro: " + e);
+                        break;
 
-        }catch(NullPointerException e){
-            System.err.println("Erro: " + e);
-               break;
+                    } catch (NullPointerException e) {
+                        System.err.println("Erro: " + e);
+                        break;
 
-        }
-                    
-                    
+                    }
+
                 case "2", "tiposanguineo", "2tiposanguineo":
                     System.out.println("Digite o Tipo Sanguineo do doador");
                     String tipoS = sc.nextLine();
-                    try{
+                    try {
                         TipoSanguineo tipo = TipoSanguineo.stringParaTipoSanguineo(tipoS);
-                    coletaMod.setTipo(tipo);
-                     break;
-                        }catch(IllegalArgumentException e){
-            System.err.println("Erro: " + e);
-               break;
+                        coletaMod.setTipo(tipo);
+                        break;
+                    } catch (IllegalArgumentException e) {
+                        System.err.println("Erro: " + e);
+                        break;
 
-        }catch(NullPointerException e){
-            System.err.println("Erro: " + e);
-               break;
+                    } catch (NullPointerException e) {
+                        System.err.println("Erro: " + e);
+                        break;
 
-        }
-                    
+                    }
+
                 case "3", "listadeexames", "exame", "exames":
-                try{
-                    List<Exame> listaExamesnovo = adicionaExame(sc);
-                    coletaMod.setListaExames(listaExamesnovo);
-                    break;
-                }catch(IllegalArgumentException e){
-            System.err.println("Erro: " + e);
-               break;
+                    try {
+                        List<Exame> listaExamesnovo = adicionaExame(sc);
+                        coletaMod.setListaExames(listaExamesnovo);
+                        break;
+                    } catch (IllegalArgumentException e) {
+                        System.err.println("Erro: " + e);
+                        break;
 
-        }catch(NullPointerException e){
-            System.err.println("Erro: " + e);
-               break;
+                    } catch (NullPointerException e) {
+                        System.err.println("Erro: " + e);
+                        break;
 
-        }
-                    
+                    }
+
                 default:
                     return;
 
             }
-            try{
+            try {
                 Hemominas.getInstance().atualizacaoColeta(atualHemocentro, coletaMod);
-            }catch(IllegalArgumentException e){
-            System.err.println("Erro: " + e);
-            
+            } catch (IllegalArgumentException e) {
+                System.err.println("Erro: " + e);
 
-        }catch(NullPointerException e){
-            System.err.println("Erro: " + e);
-               
+            } catch (NullPointerException e) {
+                System.err.println("Erro: " + e);
 
-        }
-            
+            }
+
         } catch (InputMismatchException e) {
             System.out.println("Digite um número inteiro");
             atualizarColeta(sc);
         }
 
     }
-    static void deletarColeta(Scanner sc){
+
+    static void deletarColeta(Scanner sc) {
         System.out.println("Digite o id da coleta que deseja alterar");
         try {
             int id = sc.nextInt();
             Coleta coletaMod = atualHemocentro.retornaColeta(id);
             Hemominas.getInstance().deletarColeta(atualHemocentro, coletaMod);
-        
-        
-        }
-            catch (InputMismatchException e) {
+
+        } catch (InputMismatchException e) {
             System.out.println("Digite um número inteiro");
             deletarColeta(sc);
 
-
         }
     }
-        
-    static void sistemaGestao(Scanner sc) {
 
+    static void sistemaGestao(Scanner sc) {
         while (true) {
             System.out.println("/// MENU - SISTEMA DE GESTÃO DO HEMOMINAS ///");
             System.out.println("1 - Gerenciar Hemocentros");
@@ -417,17 +429,17 @@ public class Main {
                     atualizarDoador(sc);
                     break;
                 case 3:
-                try{
-                    Hemominas.getInstance().listarDoadores(atualHemocentro);
-                    break;
-                }catch(NoSuchElementException e){
-                    System.err.println("Erro: " + e);
-                    break;
-                }catch(NullPointerException e){
-                    System.err.println("Erro: " + e);
-                    break;
-                }
-                    
+                    try {
+                        Hemominas.getInstance().listarDoadores(atualHemocentro);
+                        break;
+                    } catch (NoSuchElementException e) {
+                        System.err.println("Erro: " + e);
+                        break;
+                    } catch (NullPointerException e) {
+                        System.err.println("Erro: " + e);
+                        break;
+                    }
+
                 case 4:
                     removerDoador(sc);
                     break;
@@ -599,10 +611,11 @@ public class Main {
 
     static void removerDoador(Scanner sc) {
         String cpfInput;
-        do {
-            System.out.print("Digite o CPF do doador a ser removido: ");
-            cpfInput = sc.nextLine();
-        } while (cpfInput.isEmpty() || !Doador.validaCPF(cpfInput));
+        System.out.print("Digite o CPF do doador a ser removido: ");
+        cpfInput = sc.nextLine();
+        if (cpfInput.isEmpty() || !Doador.validaCPF(cpfInput)) {
+            System.out.println("CPF inválido.");
+        }
 
         Doador doador = Hemominas.getInstance().pesquisaDoador(atualHemocentro, cpfInput);
         try {
@@ -647,7 +660,6 @@ public class Main {
             }
         }
     }
-
 
     static void adicionarHemocentro(Scanner sc) {
         while (true) {
@@ -758,21 +770,21 @@ public class Main {
         }
 
     }
-    static void listarEstoque(Scanner sc){
-        System.out.println("Digite se quer listar  1 - TODOS ou 2 - VALIDOS");
+
+    static void listarEstoque(Scanner sc) {
+        System.out.println("Digite se quer listar 1 - TODOS ou 2 - VALIDOS");
         String escolha = sc.nextLine().toLowerCase().trim().replace(" ", "");
-            switch (escolha) {
-                case "listartodos","todos", "1","1-todos","listar1-todos":
-                    atualHemocentro.listarEstoqueTotal();
-                    break;
-                case"validos","listarvalidos","listarválidos", "2","2-validos","listar2-validos":
+        switch (escolha) {
+            case "listartodos", "todos", "1", "1-todos", "listar1-todos":
+                atualHemocentro.listarEstoqueTotal();
+                break;
+            case "validos", "listarvalidos", "listarválidos", "2", "2-validos", "listar2-validos":
                 atualHemocentro.listarEstoqueValido();
-                default:
-                    return;
-            }
-            
-          
+                break;
+            default:
+                return;
         }
+    }
 
     static void deletarHemocentro(Scanner sc) {
         System.out.println("Digite o nome do Hemocentro que deseja remover");
