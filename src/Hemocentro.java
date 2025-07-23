@@ -133,6 +133,18 @@ public class Hemocentro implements Cloneable {
         return listacoletaCopia;
     }
 
+       public List<Funcionario> retornaListaFuncionarios() {
+        List<Funcionario> listaFuncionariosCopia = new ArrayList<>();
+        for (Funcionario funcionarioOriginal : this.listaFuncionarios) {
+            try {
+                listaFuncionariosCopia.add(funcionarioOriginal.clone());
+            } catch (CloneNotSupportedException e) {
+                System.out.println("Erro ao clonar doador.");
+            }
+        }
+        return listaFuncionariosCopia;
+    }
+
     public Coleta retornaColeta(int ide) {
         for (Coleta coletaOriginal : this.listaColetas) {
             try {
@@ -173,6 +185,29 @@ public class Hemocentro implements Cloneable {
             }
         }
     }
+
+    public void atualizaFuncionarioHemocentro(String cpf, Funcionario funcionario) {
+        for (Funcionario f : listaFuncionarios) {
+            if (f.getCpf().equals(cpf)) {
+                f.setNome(funcionario.getNome());
+                f.setCpf(funcionario.getCpf());
+                f.setDataNasc(funcionario.getNascimento());
+                f.setGenero(funcionario.getGenero());
+                f.setTelefone(funcionario.getTelefone());
+                return;
+            }
+        }
+    }
+
+    public void removerFuncionario(String cpf) {
+        for (Funcionario f : listaFuncionarios) {
+            if (f.getCpf().equals(cpf)) {
+                listaFuncionarios.remove(f);
+                return;
+            }
+        }
+    }
+
 
     public void atualizaColetaHemocentro(Coleta coleta) {
         for (Coleta c : listaColetas) {
@@ -236,6 +271,10 @@ public class Hemocentro implements Cloneable {
         System.out.printf("%-5s%-5s%-5s%-5s%-5s%-5s%-5s%-5s", bolsas[0], bolsas[1], bolsas[2], bolsas[3], bolsas[4],
                 bolsas[5], bolsas[6], bolsas[7]);
         System.out.println();
+    }
+
+    public void adicionarFuncionario(Funcionario funcionario) {
+        listaFuncionarios.add(funcionario);
     }
 
     private int tipoToIndex(TipoSanguineo tipo) {

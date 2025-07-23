@@ -1,32 +1,28 @@
 import java.util.Date;
-public class Funcionario extends Pessoa{
+
+public class Funcionario extends Pessoa implements Cloneable {
     Date dataIngresso;
-    
 
-// public boolean cadastrarHemocentro(Hemocentro hemocentro){
-//         if (hemocentro == null) {
-//         throw new IllegalArgumentException("Hemocentro a ser cadastrado não pode ser nulo.");
-//     }
-//         if(Hemominas.getInstance().getQtdHemocentros() == 0){
-//             if(Hemominas.getInstance().listaHemocentros.add(hemocentro)){
-//             return true;
-//         }else
-//          throw new RuntimeException("Erro ao adicionar o primeiro hemocentro."); 
-//         }else{
-//             for(Hemocentro hemocentros : listaHemocentros){
-//                 if (hemocentros.getNome().equals(hemocentro.getNome())){
-//                     throw new RuntimeException("Hemocentro com mesmo nome já existente"); 
-//                 }else{
-//                     listaHemocentros.add(hemocentro);
-//                     return true;
-//                 }
-//                 }
-//             }
-//             return false;
-//         }
-       
+    private Funcionario(String nome, String cpf, Date dataNasc, String genero, String telefone, Date dataIngresso, Hemocentro hemocentro) {
+        super(nome, cpf, genero, dataNasc, telefone, hemocentro);
+        this.dataIngresso = dataIngresso;
+    }
 
+    public static Funcionario getInstance(String nome, String cpf, Date dateNasc, String genero, String telefone,
+            Date dataIngresso, Hemocentro hemocentro) {
+        if (nome != null && cpf != null && dateNasc != null && genero != null && telefone != null
+                && dataIngresso != null) {
+            return new Funcionario(nome, cpf, dateNasc, genero, telefone, dataIngresso, hemocentro);
+        } else
+            return null;
+    }
 
+    public Date getDataIngresso() {
+        return dataIngresso;
+    }
 
-
+    @Override
+    protected Funcionario clone() throws CloneNotSupportedException {
+        return (Funcionario) super.clone();
+    }
 }

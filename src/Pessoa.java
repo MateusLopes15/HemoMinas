@@ -7,6 +7,16 @@ public abstract class Pessoa {
     protected String genero;
     protected Date dataNasc;
     protected String telefone;
+    protected Hemocentro hemocentro;
+
+    protected Pessoa(String nome, String cpf, String genero, Date dataNasc, String telefone, Hemocentro hemocentro) {
+        this.nome = nome;
+        this.cpf = cpf;
+        this.genero = genero;
+        this.dataNasc = dataNasc;
+        this.telefone = telefone;
+        this.hemocentro = hemocentro;
+    }
 
     public static boolean validaCPF(String cpf) {
         if (!cpf.matches("\\d{11}")) {
@@ -51,6 +61,14 @@ public abstract class Pessoa {
     public String getGenero() {
         return genero;
     }
+    public Hemocentro getHemocentro() {
+        try {
+            return hemocentro.clone();
+        } catch (CloneNotSupportedException e) {
+            System.out.println("Erro: " + e);
+            return null;
+        }
+    }
     
     public void setNome(String nome) {
         this.nome = nome;
@@ -66,6 +84,5 @@ public abstract class Pessoa {
     }
     public void setGenero(String genero) {
         this.genero = genero;
-    }
-    
+    }    
 }

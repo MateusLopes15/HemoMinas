@@ -17,6 +17,7 @@ public final class Hemominas {
     private String emailSede;
     private String telefoneSede;
     private List<Hemocentro> listaHemocentros;
+    private List<Pessoa> listaPessoas;
 
     public static synchronized Hemominas getInstance() {
         if (instance == null) {
@@ -27,12 +28,12 @@ public final class Hemominas {
 
     private Hemominas() {
         this.nomeSede = "HemoMinas";
-        this.enderecoSede = "Rua Grão Pará, 882, bairro Funcionários, Belo Horizonte, Minas Gerais";
+        this.enderecoSede = "Rua Grão Pará, 882, Funcionários - Belo Horizonte";
         this.cepSede = "30150-341";
         this.emailSede = "gabinete@hemominas.mg.gov.br";
         this.telefoneSede = "(31) 3768-7450";
         this.listaHemocentros = new ArrayList<>();
-
+        this.listaPessoas = new ArrayList<>();
     }
 
     public int getQtdHemocentros() {
@@ -118,19 +119,31 @@ public final class Hemominas {
     }
 
     public void listarHemocentros() {
-        System.out.println("MUDE. MUDE ESSE MÉTODO AGORA.");
-        //mude esse método agora
+        if (listaHemocentros.size() == 0) {
+            System.out.println("Não existem hemocentros cadastrados.");
+        } else {
+            System.out.printf("%-30s%-70s%-12s%-50s%-30s", "NOME", "ENDEREÇO", "CEP", "EMAIL", "TELEFONE");
+            System.out.println();
+            System.out.printf("%-30s%-70s%-12s%-50s%-30s", this.nomeSede, this.enderecoSede, this.cepSede,
+                    this.emailSede, this.telefoneSede);
+            System.out.println();
+            for (Hemocentro h : listaHemocentros) {
+                System.out.printf("%-30s%-70s%-12s%-50s%-30s", h.getNome(), h.getEndereco(), h.getCep(), h.getEmail(),
+                        h.getTelefone());
+                System.out.println();
+            }
+        }
     }
 
     public void listarHemocentrosMenu() {
         List<Hemocentro> hemocentros = Hemominas.getInstance().retornarHemocentros();
         for (int i = 0; i < getQtdHemocentros(); i++) {
             Hemocentro hemocentro = hemocentros.get(i);
-            System.out.println((i+1) + ") " + hemocentro.getNome());
+            System.out.println((i + 1) + ") " + hemocentro.getNome());
         }
     }
 
-    public void removeHemocentro(int id) { // Privar só pra o gestor
+    public void removeHemocentro(int id) {
         listaHemocentros.remove(id);
     }
 
@@ -141,18 +154,45 @@ public final class Hemominas {
         }
     }
 
-    public void atualizacaoDosHemocentro(int id, Hemocentro hemocentro) { // Privar só pra o gestor
+    public void atualizacaoDosHemocentro(int id, Hemocentro hemocentro) {
         listaHemocentros.get(id).setCep(hemocentro.getCep());
         listaHemocentros.get(id).setEmail(hemocentro.getEmail());
         listaHemocentros.get(id).setEndereco(hemocentro.getEndereco());
         listaHemocentros.get(id).setNome(hemocentro.getNome());
         listaHemocentros.get(id).setTelefone(hemocentro.getTelefone());
-        // listaHemocentros.get(id).
     }
 
     public void adicionaDoador(Hemocentro hemocentro, Doador doador) {
         int id = getIdHemocentro(hemocentro.getNome());
         listaHemocentros.get(id).adicionarDoador(doador);
+        adicionaPessoa(doador);
+    }
+
+    public void adicionaFuncionario(Hemocentro hemocentro, Funcionario funcionario) {
+        int id = getIdHemocentro(hemocentro.getNome());
+        listaHemocentros.get(id).adicionarFuncionario(funcionario);
+        adicionaPessoa(funcionario);
+    }
+
+    public void adicionaPessoa(Pessoa p) {
+        listaPessoas.add(p);
+    }
+
+    public void listarPessoas() {
+        if (listaPessoas.size() == 0) {
+            System.out.println("Não existem pessoas cadastradas.");
+            return;
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        System.out.printf("%-30s%-30s%-30s%-30s%-30s%-30s%-30s", "NOME", "CPF", "GÊNERO", "DATA NASC", "TELEFONE",
+                "FUNÇÃO", "HEMOCENTRO");
+        System.out.println();
+        for (Pessoa p : listaPessoas) {
+            System.out.printf("%-30s%-30s%-30s%-30s%-30s%-30s%-30s", p.getNome(), p.getCpf(), p.getGenero(),
+                    sdf.format(p.getNascimento()), p.getTelefone(), p.getClass().getName(),
+                    p.getHemocentro().getNome());
+            System.out.println();
+        }
     }
 
     public void adicionaColeta(Hemocentro hemocentro, Coleta coleta) {
@@ -160,9 +200,62 @@ public final class Hemominas {
         listaHemocentros.get(id).adicionarColeta(coleta);
     }
 
+    public void listarFuncionarios(Hemocentro h) {
+        int id = getIdHemocentro(h.getNome());
+        List<Funcionario> listaFuncionarios = listaHemocentros.get(id).retornaListaFuncionarios();
+
+        if (listaFuncionarios.size() == 0) {
+            System.out.println("Não existem funcionários cadastrados.");
+            return;
+        }
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        System.out.printf("%-30s%-30s%-30s%-30s%-30s%-30s", "NOME", "CPF", "GÊNERO", "DATA NASC", "TELEFONE",
+                "DATA DE INGRESSO");
+        System.out.println();
+        for (int i = 0; i < listaFuncionarios.size(); i++) {
+            Funcionario funcionario = listaFuncionarios.get(i);
+            System.out.printf("%-30s%-30s%-30s%-30s%-30s%-30s", funcionario.getNome(), funcionario.getCpf(),
+                    funcionario.getGenero(), sdf.format(funcionario.getNascimento()), funcionario.getTelefone(),
+                    sdf.format(funcionario.getDataIngresso()));
+            System.out.println();
+        }
+    }
+
+    public Funcionario pesquisaFuncionario(Hemocentro hemocentro, String cpf) {
+        int id = getIdHemocentro(hemocentro.getNome());
+        for (Funcionario funcionario : listaHemocentros.get(id).retornaListaFuncionarios()) {
+            if (funcionario.getCpf().equals(cpf)) {
+                try {
+                    return funcionario.clone();
+                } catch (CloneNotSupportedException e) {
+                    return null;
+                }
+            }
+        }
+        return null;
+    }
+
+    public void atualizarFuncionario(Hemocentro h, Funcionario funcionario, String cpfAntigo) {
+        for (Hemocentro hemocentroAtual : listaHemocentros) {
+            if (hemocentroAtual.getNome().equals(h.getNome())) {
+                hemocentroAtual.atualizaFuncionarioHemocentro(cpfAntigo, funcionario);
+                return;
+            }
+        }
+    }
+
+    public void removerFuncionario(Hemocentro h, Funcionario f) {
+        for (Hemocentro hemoAtual : listaHemocentros) {
+            if (hemoAtual.getNome().equals(h.getNome())) {
+                hemoAtual.removerFuncionario(f.getCpf());
+                return;
+            }
+        }
+    }
+
     public void listarColetas(Hemocentro hemocentro) {
         Hemocentro hemocentr;
-        int qtd = 0;
         int id = getIdHemocentro(hemocentro.getNome());
         hemocentr = retornaHemocentro(id);
         List<Coleta> listaTodasColetas = hemocentr.retornaListaColeta();
@@ -174,7 +267,6 @@ public final class Hemominas {
         System.out.printf("%-30s%-30s%-30s%-30s%-30s", "ID", "TIPO", "CPF", "VALIDADE", "RESULTADO");
         System.out.println();
         for (int i = 0; i < listaTodasColetas.size(); i++) {
-            List<Exame> exames = listaTodasColetas.get(i).getListaExames();
             Coleta coleta = listaTodasColetas.get(i);
             String usabilidade;
             if (coleta.retornaUsabilidade()) {
@@ -185,7 +277,6 @@ public final class Hemominas {
             System.out.printf("%-30s%-30s%-30s%-30s%-30s", coleta.getId(), coleta.getTipo(),
                     coleta.getDoador().getCpf(), coleta.getDataValidade().format(formatter), usabilidade);
             System.out.println();
-            qtd = 0;
         }
     }
 
@@ -380,7 +471,7 @@ public final class Hemominas {
         System.out.println("--- Inicialização concluída ---");
     }
 
-    public static void inicializarDoadoresParaHemocentros() {
+    public static void inicializarPessoasParaHemocentros() {
         Hemominas sistemaHemominas = Hemominas.getInstance();
 
         System.out.println("\n--- Inicializando Doadores para Hemocentros ---");
@@ -396,41 +487,46 @@ public final class Hemominas {
         Random random = new Random();
 
         String[] nomesMasculinos = {
-            "João", "Pedro", "Lucas", "Gabriel", "Felipe", 
-            "Bruno", "Gustavo", "Henrique", "Daniel", "Rafael"
+                "João", "Pedro", "Lucas", "Gabriel", "Felipe",
+                "Bruno", "Gustavo", "Henrique", "Daniel", "Rafael"
         };
 
         String[] nomesFemininos = {
-            "Maria", "Ana", "Juliana", "Fernanda", "Camila",
-            "Patrícia", "Gabriela", "Larissa", "Amanda", "Carolina"
+                "Maria", "Ana", "Juliana", "Fernanda", "Camila",
+                "Patrícia", "Gabriela", "Larissa", "Amanda", "Carolina"
         };
 
         String[] sobrenomes = {
-            "Silva", "Santos", "Oliveira", "Souza", "Pereira", 
-            "Lima", "Costa", "Ferreira", "Rodrigues", "Almeida"
+                "Silva", "Santos", "Oliveira", "Souza", "Pereira",
+                "Lima", "Costa", "Ferreira", "Rodrigues", "Almeida"
         };
 
-
         for (Hemocentro hemocentroAtual : hemocentrosCadastrados) {
-            System.out.println("Adicionando doadores para o Hemocentro: " + hemocentroAtual.getNome());
-            int numDoadores = 50 + random.nextInt(100);
+            System.out.println("Adicionando pessoas para o Hemocentro: " + hemocentroAtual.getNome());
+            int numDoadores = 30;
             for (int i = 0; i < numDoadores; i++) {
                 try {
                     int genero = random.nextInt(2);
                     String nomeDoador = switch (genero) {
-                        case 0: yield nomesMasculinos[random.nextInt(nomesMasculinos.length)] + " " + sobrenomes[random.nextInt(sobrenomes.length)];
-                        default: yield nomesFemininos[random.nextInt(nomesFemininos.length)] + " " + sobrenomes[random.nextInt(sobrenomes.length)];
+                        case 0:
+                            yield nomesMasculinos[random.nextInt(nomesMasculinos.length)] + " "
+                                    + sobrenomes[random.nextInt(sobrenomes.length)];
+                        default:
+                            yield nomesFemininos[random.nextInt(nomesFemininos.length)] + " "
+                                    + sobrenomes[random.nextInt(sobrenomes.length)];
                     };
                     String cpfDoador = gerarCPFValido(random);
                     LocalDate dataNascLocalDate = LocalDate.now().minusYears(random.nextInt(43) + 18);
                     Date dataNascDoador = Date.from(dataNascLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
                     String generoDoador = switch (genero) {
-                        case 0: yield "Masculino";
-                        default: yield "Feminino";
+                        case 0:
+                            yield "Masculino";
+                        default:
+                            yield "Feminino";
                     };
                     String telefoneDoador = "319" + (random.nextInt(90000000) + 10000000);
                     Doador novoDoador = Doador.getInstance(
-                            nomeDoador, cpfDoador, dataNascDoador, generoDoador, telefoneDoador);
+                            nomeDoador, cpfDoador, dataNascDoador, generoDoador, telefoneDoador, hemocentroAtual);
                     if (novoDoador != null) {
                         sistemaHemominas.adicionaDoador(hemocentroAtual, novoDoador);
                     } else {
@@ -445,8 +541,51 @@ public final class Hemominas {
                             "Erro ao adicionar doador ao " + hemocentroAtual.getNome() + ": " + e.getMessage());
                 }
             }
+
+            int numFuncionarios = 10;
+            for (int j = 0; j < numFuncionarios; j++) {
+                try {
+                    int genero = random.nextInt(2);
+                    String nomeFuncionario = switch (genero) {
+                        case 0:
+                            yield nomesMasculinos[random.nextInt(nomesMasculinos.length)] + " "
+                                    + sobrenomes[random.nextInt(sobrenomes.length)];
+                        default:
+                            yield nomesFemininos[random.nextInt(nomesFemininos.length)] + " "
+                                    + sobrenomes[random.nextInt(sobrenomes.length)];
+                    };
+                    String cpfFuncionario = gerarCPFValido(random);
+                    LocalDate dataNascLocalDate = LocalDate.now().minusYears(random.nextInt(43) + 18);
+                    Date dataNascFuncionario = Date
+                            .from(dataNascLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+                    LocalDate dataIngressoLocalDate = LocalDate.now().minusYears(random.nextInt(3));
+                    Date dataIngressoFuncionario = Date
+                            .from(dataIngressoLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+                    String generoFuncionario = switch (genero) {
+                        case 0:
+                            yield "Masculino";
+                        default:
+                            yield "Feminino";
+                    };
+                    String telefoneFuncionario = "319" + (random.nextInt(90000000) + 10000000);
+                    Funcionario novoFuncionario = Funcionario.getInstance(nomeFuncionario, cpfFuncionario,
+                            dataNascFuncionario, generoFuncionario, telefoneFuncionario, dataIngressoFuncionario,
+                            hemocentroAtual);
+                    if (novoFuncionario != null) {
+                        sistemaHemominas.adicionaFuncionario(hemocentroAtual, novoFuncionario);
+                    } else {
+                        System.err.println("Erro: Não foi possível criar o objeto Doador para " + nomeFuncionario
+                                + " (parâmetros nulos).");
+                    }
+                } catch (IllegalArgumentException e) {
+                    System.err.println("Erro ao criar doador (dados inválidos): " + e.getMessage());
+                } catch (RuntimeException e) {
+
+                    System.err.println(
+                            "Erro ao adicionar doador ao " + hemocentroAtual.getNome() + ": " + e.getMessage());
+                }
+            }
         }
-        System.out.println("--- Inicialização de Doadores concluída ---");
     }
 
     private static String gerarCPFValido(Random r) {
@@ -525,9 +664,12 @@ public final class Hemominas {
                     }
 
                     for (TipoExame tipoExameIndividual : todosTiposExame) { // <<-- Itera sobre CADA TIPO DE EXAME
-                        String resultadoAleatorio = switch (random.nextInt(20)) { // <<-- Chance de 95% para um exame ser negativo
-                            case 19: yield "positivo";
-                            default: yield "negativo";
+                        String resultadoAleatorio = switch (random.nextInt(20)) { // <<-- Chance de 95% para um exame
+                                                                                  // ser negativo
+                            case 19:
+                                yield "positivo";
+                            default:
+                                yield "negativo";
                         };
 
                         Exame novoExame = Exame.getInstance(tipoExameIndividual, resultadoAleatorio);
